@@ -72,6 +72,7 @@ def main():
             "message_types": sorted(set(str(a.get("msgType")) for a in examples if isinstance(a, dict) and a.get("msgType"))),
             "statuses": sorted(set(str(a.get("status")) for a in examples if isinstance(a, dict) and a.get("status"))),
             "geocode_name_keys": sorted(set(str(g.get("valueName")) for g in geocodes if g.get("valueName"))),
+            "geocode_value_patterns": {str(name): sorted(set(("four_digit_numeric" if str(g.get("value","")).isdigit() and len(str(g.get("value","")))==4 else "other") for g in geocodes if str(g.get("valueName"))==str(name))) for name in sorted(set(str(g.get("valueName")) for g in geocodes if g.get("valueName"))) },
             "stored_content": False
         }
     except Exception as exc:
