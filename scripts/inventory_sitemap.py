@@ -33,7 +33,23 @@ def main():
         if url in seen or urlparse(url).hostname not in ("krisinformation.se","www.krisinformation.se"):continue
         seen.add(url)
         try:
-            root=ET.fromstring(retrieve(url))
+            raw=retrieve(url)
+            try:
+                root=ET.fromstring(raw)
+            except (ET.ParseError, ValueError) as first_error:
+                # Some legacy sitemap servers declare an incorrect XML encoding.
+                # Retry a Unicode parse only after removing the incorrect declaration.
+                decoded=None
+                for codec in ("utf-8-sig", "windows-1252"):
+                    try:
+                        decoded=raw.decode(codec)
+                        break
+                    except UnicodeDecodeError:
+                        pass
+                if decoded is None:
+                    raise first_error
+                decoded=re.sub(r'^\\s*<\\?xml[^>]*\\?>', '', decoded, count=1)
+                root=ET.fromstring(decoded)
             tag=root.tag.rsplit("}",1)[-1].lower()
             locations=[(x.text or "").strip() for x in root.iter() if x.tag.rsplit("}",1)[-1].lower()=="loc"]
             if tag=="sitemapindex":
