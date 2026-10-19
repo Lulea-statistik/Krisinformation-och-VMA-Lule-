@@ -18,6 +18,8 @@ jobs:
         run: python -m py_compile scripts/sr_vma_pilot.py
       - name: Testa kommunfiltrering med syntetiska fall
         run: python -m unittest discover -s tests -p 'test_sr_vma.py' -v
+      - name: Testa händelsegruppering med syntetiska fall
+        run: python -m unittest discover -s tests -p 'test_vma_incidents.py' -v
       - name: Hämta produktionsdiagnostik
         run: python scripts/sr_vma_pilot.py
       - name: Spara aggregerad diagnostik
