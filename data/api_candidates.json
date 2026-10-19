@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-19T07:26:22.569606+00:00",
+  "generated_utc": "2026-10-19T08:03:31.734301+00:00",
   "notice": "Candidate search only. API response may be capped, filtered or incomplete. No entries are automatically verified as formal VMA.",
   "attempts": [
     {
@@ -22,6 +22,12 @@
     }
   ],
   "total_articles_returned_across_queries": 2,
+  "coverage_assessment": "not_established",
+  "candidate_class_counts": {
+    "municipality_candidate": 0,
+    "county_candidate": 0,
+    "national_text_match_only": 1
+  },
   "candidates": [
     {
       "source_id": "https://www.krisinformation.se/aktuellt/nyheter/har-ska-varden-starkas-vid-krig/",
@@ -39,6 +45,7 @@
       "possible_vma": false,
       "review_status": "unverified_candidate",
       "geography_review": "needed",
+      "geography_candidate_class": "national_text_match_only",
       "source": "Krisinformation API v3"
     }
   ]
