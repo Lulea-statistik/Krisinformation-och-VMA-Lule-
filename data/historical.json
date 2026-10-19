@@ -213,5 +213,53 @@
     "source_type": "historisk artikel",
     "verified": true,
     "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig."
+  },
+  {
+    "id": "sr-2013-09-10-2581",
+    "date": "2013-09-10",
+    "municipality": "Piteå",
+    "municipality_code": "2581",
+    "title": "VMA vid restaurangbrand i Piteå",
+    "location": "Max-restaurangen i Piteå, varning till boende norr om branden",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "url": "https://www.sverigesradio.se/artikel/5641413",
+    "verification_note": "Sveriges Radio 10 september 2013 bekräftar att VMA utfärdades och sedan inte längre gällde. Exakt slutdatum/tid saknas.",
+    "type": "VMA",
+    "source": "Sveriges Radio",
+    "source_type": "historisk nyhetsartikel",
+    "verified": true
+  },
+  {
+    "id": "sr-2015-02-02-2580",
+    "date": "2015-02-02",
+    "municipality": "Luleå",
+    "municipality_code": "2580",
+    "title": "VMA vid industribrand på Ferruform i Luleå",
+    "location": "Ferruforms industriområde, Luleå",
+    "category": "Brand och rök",
+    "status": "Historisk, avslutstid ej verifierad",
+    "url": "https://www.sverigesradio.se/artikel/6082722",
+    "verification_note": "Datumet avser SR:s artikel den 2 februari 2015; branden började föregående kväll. Artikeln bekräftar utfärdat VMA men inte slutdatum.",
+    "type": "VMA",
+    "source": "Sveriges Radio",
+    "source_type": "historisk nyhetsartikel",
+    "verified": true
+  },
+  {
+    "id": "sr-2020-08-24-2560",
+    "date": "2020-08-24",
+    "municipality": "Älvsbyn",
+    "municipality_code": "2560",
+    "title": "VMA vid brand i Polarbröds bageri",
+    "location": "Älvsbyn",
+    "category": "Brand och rök",
+    "status": "Historisk, avslutstid ej verifierad",
+    "url": "https://www.sverigesradio.se/artikel/7539014",
+    "verification_note": "SR 24 augusti 2020 bekräftar utfärdat VMA efter brand i Polarbröds bageri; exakt start- och slutdatum behöver kontrolleras separat.",
+    "type": "VMA",
+    "source": "Sveriges Radio",
+    "source_type": "historisk nyhetsartikel",
+    "verified": true
   }
 ]
