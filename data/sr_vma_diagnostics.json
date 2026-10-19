@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-19T08:53:17.438762+00:00",
+  "checked_at_utc": "2026-10-19T08:59:08.224272+00:00",
   "purpose": "Connectivity and schema checks only, not historical VMA extraction",
   "retains_alert_content": false,
   "alerts": {
@@ -159,6 +159,14 @@
       "Kommun",
       "Sverige"
     ],
+    "geocode_value_patterns": {
+      "Kommun": [
+        "four_digit_numeric"
+      ],
+      "Sverige": [
+        "other"
+      ]
+    },
     "stored_content": false
   }
 }
