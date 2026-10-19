@@ -14,6 +14,8 @@ jobs:
           python-version: '3.12'
       - name: Kontrollera syntax
         run: python -m py_compile scripts/sr_vma_pilot.py
+      - name: Testa kommunfiltrering med syntetiska fall
+        run: python -m unittest discover -s tests -p 'test_sr_vma.py' -v
       - name: Hämta produktionsdiagnostik
         run: python scripts/sr_vma_pilot.py
       - name: Spara aggregerad diagnostik
