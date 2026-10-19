@@ -312,5 +312,41 @@
     "source": "Krisinformation.se",
     "source_type": "historisk artikel/årsarkiv",
     "verified": true
+  },
+  {
+    "id": "krisinfo-2019-09-07-storheden",
+    "date": "2019-09-07",
+    "end_date": "2019-09-08",
+    "title": "VMA i Storheden i Luleå",
+    "municipality": "Luleå",
+    "municipality_code": "2580",
+    "location": "Storheden",
+    "category": "Ej närmare klassificerad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/2019/september/",
+    "verification_note": "Officiellt månadsarkiv: publicerat 7 september 2019 kl 22.07, återtaget 8 september kl 00.20; originalartikel ej granskad för orsak.",
+    "source_type": "officiellt månadsarkiv",
+    "type": "VMA",
+    "status": "Avslutad",
+    "verified": true,
+    "verification_level": "archive_confirmed"
+  },
+  {
+    "id": "krisinfo-2019-10-14-jokkmokk",
+    "date": "2019-10-14",
+    "end_date": "2019-10-14",
+    "title": "VMA i Jokkmokk",
+    "municipality": "Jokkmokk",
+    "municipality_code": "2510",
+    "location": "Jokkmokk",
+    "category": "Ej närmare klassificerad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/2019/",
+    "verification_note": "Officiellt årsarkiv: publicerat 14 oktober 2019 kl 02.23, återtaget kl 04.22; orsak och exakt område ej fastställda.",
+    "source_type": "officiellt årsarkiv",
+    "type": "VMA",
+    "status": "Avslutad",
+    "verified": true,
+    "verification_level": "archive_confirmed"
   }
 ]
