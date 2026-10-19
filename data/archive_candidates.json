@@ -1,0 +1,92 @@
+{
+  "generated_utc": "2026-10-19T07:08:02.967598+00:00",
+  "disclaimer": "Search candidates only: NOT verified VMA or complete archive coverage.",
+  "coverage": [
+    {
+      "year": 2010,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2011,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2012,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2013,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2014,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2015,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2016,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2017,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2018,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2019,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2020,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2021,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2022,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2023,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2024,
+      "archive_accessible": false,
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "year": 2025,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    },
+    {
+      "year": 2026,
+      "archive_accessible": false,
+      "error": "HTTP Error 410: Gone"
+    }
+  ],
+  "candidates": []
+}
