@@ -7,6 +7,7 @@
 <title>Krisinformation och VMA – Luleå</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#19212b;background:#f5f7f9}*{box-sizing:border-box}body{margin:0}header{background:#a61d32;color:white;padding:2rem max(1rem,calc((100vw - 1100px)/2))}header h1{margin:.2rem 0;font-size:clamp(1.7rem,4vw,2.6rem)}header p{margin:.5rem 0;max-width:60ch}main,footer{max-width:1100px;margin:auto;padding:1.5rem 1rem}.notice{border-left:5px solid #b7791f;background:#fff5da;padding:1rem;margin:1rem 0 1.5rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}.panel{background:white;border:1px solid #dce2e7;border-radius:12px;padding:1.2rem}.panel h2{font-size:1.15rem;margin-top:0}a{color:#9d2036}a:focus-visible{outline:3px solid #19212b}header a{color:white}small{color:#4b5563}footer{border-top:1px solid #dce2e7;font-size:.9rem}.pill{font-size:.78rem;border-radius:12px;background:#f0f1f4;padding:.2rem .6rem;display:inline-block}
+select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min-width:230px;max-width:100%;background:white}.controls{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.94rem}th,td{padding:.65rem;text-align:left;border-bottom:1px solid #e2e7eb}th{background:#f3f5f7} .table-scroll{overflow-x:auto} .muted{color:#576274} .data-note{font-size:.9rem;color:#596472}
 </style>
 </head>
 <body>
@@ -20,24 +21,56 @@
 <article class="panel"><h2>Karta</h2><p>Planerad indelning: Luleå kommun, övriga Norrbotten och nationella händelser. Länsövergripande varningar ska inte räknas som enbart Luleåhändelser.</p></article>
 </section>
 <section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small></section>
-<section class="panel" style="margin-top:1rem"><h2>Verifierade historiska VMA i Luleå</h2><p>Endast källkontrollerade poster visas här. Listan är ännu inte fullständig.</p><div id="history">Läser in historiska poster…</div></section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="history-title">
+<h2 id="history-title">Historiska VMA – Norrbotten</h2>
+<p>Urval av registrerade historiska poster, inte en fullständig tidsserie. Luleå visas som standard. Övriga kommuner får innehåll när källgranskade poster har lagts till.</p>
+<div class="controls"><label for="municipality"><strong>Kommun</strong></label><select id="municipality"><option value="2580">Luleå</option></select><span id="record-count" class="muted" aria-live="polite"></span></div>
+<div class="table-scroll"><table><thead><tr><th>Datum</th><th>Händelse</th><th>Område</th><th>Status</th><th>Källa</th></tr></thead><tbody id="history"><tr><td colspan="5">Läser in historiska poster…</td></tr></tbody></table></div>
+<p class="data-note">Källposter redovisas separat från SR:s tekniska pilot. Ingen tabellpost innebär inte att kommunen saknade VMA.</p>
+</section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="pilot-title">
+<h2 id="pilot-title">SR VMA – teknisk insamlingsstatus</h2>
+<p id="pilot-status">Läser diagnostik…</p>
+<p class="data-note">Detta är en timvis teknisk kontroll, inte en direktsänd varningstjänst. Den sparar inga VMA-texter och ger inte ett historiskt händelseantal. Kontrollera alltid aktuella varningar hos <a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Krisinformation.se</a>.</p>
+</section>
 <script>
 (async function(){
- const el=document.getElementById('history');
+ const municipalities={"2505":"Arvidsjaur","2506":"Arjeplog","2510":"Jokkmokk","2513":"Överkalix","2514":"Kalix","2518":"Övertorneå","2521":"Pajala","2523":"Gällivare","2560":"Älvsbyn","2580":"Luleå","2581":"Piteå","2582":"Boden","2583":"Haparanda","2584":"Kiruna"};
+ const select=document.getElementById('municipality');
+ Object.entries(municipalities).sort((a,b)=>a[1].localeCompare(b[1],'sv')).forEach(([code,name])=>{if(code==="2580")return;const opt=document.createElement('option');opt.value=code;opt.textContent=name;select.append(opt);});
+ const body=document.getElementById('history'),count=document.getElementById('record-count');
+ const td=(tr,value)=>{const cell=document.createElement('td');cell.textContent=String(value??'–');tr.append(cell);return cell;};
  try{
   const response=await fetch('./data/historical.json',{cache:'no-store'});
   if(!response.ok)throw new Error('HTTP '+response.status);
-  const records=await response.json();
-  el.replaceChildren();
-  if(!records.length){el.textContent='Inga kontrollerade poster inlagda ännu.';return;}
-  for(const e of records.sort((a,b)=>b.date.localeCompare(a.date))){
-   const item=document.createElement('article'); item.style.padding='1rem 0'; item.style.borderTop='1px solid #dce2e7';
-   const h=document.createElement('h3');h.style.margin='.2rem 0';h.textContent=e.title;
-   const p=document.createElement('p');p.textContent=e.date+' · '+e.location+' · '+e.status+' · '+e.type;
-   const a=document.createElement('a');a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Originalkälla hos '+e.source+' ↗';
-   item.append(h,p,a);el.append(item);
+  const all=await response.json();
+  if(!Array.isArray(all))throw new Error('Felaktigt dataformat');
+  function render(){
+   body.replaceChildren();
+   const name=municipalities[select.value];
+   const records=all.filter(e=>e.verified===true && (e.municipality_code===select.value || (e.municipality===name && !e.municipality_code))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+   count.textContent=records.length+' registrerade poster (ofullständigt urval)';
+   if(!records.length){const tr=document.createElement('tr');const cell=td(tr,'Inga granskade poster registrerade för '+name+'. Detta innebär inte att VMA saknats.');cell.colSpan=5;body.append(tr);return;}
+   for(const e of records){const tr=document.createElement('tr');td(tr,e.date);td(tr,e.title);td(tr,e.location);td(tr,e.status);
+    const cell=document.createElement('td');
+    if(typeof e.url==='string' && /^https:\/\//.test(e.url)){const a=document.createElement('a');a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=e.source||'Originalkälla';cell.append(a);}else{cell.textContent=e.source||'Okänd';}
+    tr.append(cell);body.append(tr);
+   }
   }
- }catch(error){el.textContent='Historiken kunde inte laddas. Se originalkällorna via Metod & data.';}
+  select.addEventListener('change',render);render();
+ }catch(error){body.replaceChildren();const tr=document.createElement('tr');const cell=td(tr,'Historiken kunde inte läsas.');cell.colSpan=5;body.append(tr);}
+ const target=document.getElementById('pilot-status');
+ try{
+   const response=await fetch('./data/sr_vma_pilot.json',{cache:'no-store'});
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const d=await response.json();
+   const checked=new Date(d.checked_at_utc);
+   if(!Number.isFinite(checked.getTime())||!Array.isArray(d.norrbotten_municipality_counts))throw new Error('Ofullständigt svar');
+   const age=Date.now()-checked.getTime();
+   const fresh=age>=0 && age<=2*60*60*1000;
+   const time=new Intl.DateTimeFormat('sv-SE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Stockholm'}).format(checked);
+   target.textContent='Senaste tekniska kontroll: '+time+' (svensk tid). '+(fresh?'Diagnostiken är högst två timmar gammal.':'Diagnostiken är äldre än två timmar eller har fel tidsstämpel.')+' Antal meddelanden i kontrollerad ögonblicksbild: '+String(d.production_count)+'. Detta är inte en bekräftelse av aktuell VMA-status.';
+ }catch(error){target.textContent='Teknisk insamlingsstatus kunde inte verifieras.';}
 })();
 </script>
 </main><footer>Fristående informationsprojekt. Kontrollera alltid pågående varningar hos officiella källor.</footer>
