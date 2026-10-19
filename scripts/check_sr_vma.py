@@ -56,11 +56,22 @@ def main():
     try:
         test = read_json("https://vmaapi.sr.se/testapi/v3/examples/data")
         # Record structure only. Test messages must never enter the public alerts feed.
+        examples = test.get("alerts", []) if isinstance(test, dict) else test if isinstance(test, list) else []
+        info_objects = [info for alert in examples if isinstance(alert, dict) for info in alert.get("info", []) if isinstance(info, dict)]
+        areas = [area for info in info_objects for area in info.get("area", []) if isinstance(area, dict)]
+        geocodes = [geo for area in areas for geo in area.get("geocode", []) if isinstance(geo, dict)]
         data["test_examples"] = {
             "ok": True,
             "response_type": type(test).__name__,
             "top_level_keys": sorted(test.keys()) if isinstance(test, dict) else [],
-            "example_count": len(test) if isinstance(test, list) else None,
+            "example_count": len(examples),
+            "alert_field_names": sorted(set(k for alert in examples if isinstance(alert, dict) for k in alert.keys())),
+            "info_field_names": sorted(set(k for info in info_objects for k in info.keys())),
+            "area_field_names": sorted(set(k for area in areas for k in area.keys())),
+            "geocode_field_names": sorted(set(k for geo in geocodes for k in geo.keys())),
+            "message_types": sorted(set(str(a.get("msgType")) for a in examples if isinstance(a, dict) and a.get("msgType"))),
+            "statuses": sorted(set(str(a.get("status")) for a in examples if isinstance(a, dict) and a.get("status"))),
+            "geocode_name_keys": sorted(set(str(g.get("valueName")) for g in geocodes if g.get("valueName"))),
             "stored_content": False
         }
     except Exception as exc:
