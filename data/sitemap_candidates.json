@@ -1,12 +1,13 @@
 {
-  "generated_utc": "2026-10-19T08:05:26.029237+00:00",
+  "generated_utc": "2026-10-19T08:13:47.737279+00:00",
   "status": "discovery_only",
   "warning": "Sitemaps may omit historical pages. Candidate URLs do not establish a formal VMA or Lulea relevance.",
   "sitemap_checks": [
     {
       "url": "https://www.krisinformation.se/sitemap.xml",
-      "ok": false,
-      "error": "encoding specified in XML declaration is incorrect: line 1, column 30"
+      "ok": true,
+      "type": "urlset",
+      "locations": 448
     },
     {
       "url": "https://www.krisinformation.se/sitemap_index.xml",
@@ -15,10 +16,137 @@
     }
   ],
   "errors": [],
-  "urls_discovered": 0,
+  "urls_discovered": 448,
   "queue_remaining": 0,
   "sitemap_limit_reached": false,
   "url_limit_reached": false,
-  "candidate_count": 0,
-  "candidates": []
+  "candidate_count": 21,
+  "candidates": [
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/se-alert-ny-kanal-for-viktigt-meddelande-till-allmanheten/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-boras-i-boras-kommun-vastra-gotalands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-boras/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-borlange/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-gamlestaden-och-backaomradet-i-goteborgs-kommun/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-hastveda-i-hassleholms-kommun-skane-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-heden-i-bodens-kommun-norrbottens-lan/",
+      "candidate_class": "regional_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-hemmanet-i-sundsvalls-kommun-vasternorrlands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-hogsby-monsteras-och-oskarshamns-kommun-kalmar-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-jagersro-malmo-kommun/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-malmo-skane-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-norra-dalarnas-gavleborgs-vasternorrlands-och-sodra-jamtlands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-oskarshamn-kalmar-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-ostersunds-kommun-jamtlands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-rattvik-i-dalarnas-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-skeppsbron-i-malmo-skane-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-soderkulla-i-boras-kommun-vastra-gotalands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-uddevalla-och-vanersborg-i-vastra-gotalands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-uppsala/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/nyheter/viktigt-meddelande-till-allmanheten-i-vasternorrlands-lan/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    },
+    {
+      "url": "https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/",
+      "candidate_class": "generic_vma_url",
+      "review_status": "unverified_candidate",
+      "source": "official_sitemap"
+    }
+  ]
 }
