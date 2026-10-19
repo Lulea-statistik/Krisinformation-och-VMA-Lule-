@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 
 API="https://api.krisinformation.se/v3/news"
 OUT=Path("data/api_candidates.json")
-KEYWORDS=("luleå","lulea","ytterviken","storheden","gammelstad","sunderbyn","hertsön","porsön","råneå","norrbotten")
+LOCAL=("luleå","lulea","ytterviken","storheden","gammelstad","sunderbyn","hertsön","porsön","råneå")\nREGIONAL=("norrbotten",)
 VMA=("vma","viktigt meddelande till allmänheten","faran över")
 
 def main():
@@ -35,7 +35,7 @@ def main():
                 if not isinstance(a,dict): continue
                 blob=" ".join(str(a.get(k,"")) for k in ("Headline","Preamble","BodyText","Area","Web","headline","preamble","bodyText","area","web"))
                 lower=blob.casefold()
-                if not any(k in lower for k in KEYWORDS):continue
+                if not any(k in lower for k in LOCAL + REGIONAL):continue\n                is_local=any(k in lower for k in LOCAL)\n                geography=("municipality_candidate" if is_local else "county_candidate")\n                if isinstance(a.get("Area") or a.get("area"),list):\n                    area_text=json.dumps(a.get("Area") or a.get("area"),ensure_ascii=False).casefold()\n                    if "country" in area_text and not any(k in area_text for k in LOCAL + REGIONAL):\n                        geography="national_text_match_only"
                 link=a.get("Web") or a.get("web") or ""
                 ident=str(a.get("Id") or a.get("id") or link or a.get("Headline") or a.get("headline"))
                 if not ident:continue
@@ -47,7 +47,7 @@ def main():
                     "area":a.get("Area") or a.get("area"),
                     "possible_vma":any(k in lower for k in VMA),
                     "review_status":"unverified_candidate",
-                    "geography_review":"needed",
+                    "geography_review":"needed",\n                    "geography_candidate_class":geography,
                     "source":"Krisinformation API v3"
                 }
         except Exception as exc:
@@ -55,7 +55,7 @@ def main():
     result={"generated_utc":datetime.now(timezone.utc).isoformat(),
       "notice":"Candidate search only. API response may be capped, filtered or incomplete. No entries are automatically verified as formal VMA.",
       "attempts":attempts,"total_articles_returned_across_queries":received,
-      "candidates":sorted(items.values(),key=lambda a:str(a.get("published") or ""),reverse=True)}
+      "coverage_assessment":"not_established",\n      "candidate_class_counts":{k:sum(x["geography_candidate_class"]==k for x in items.values()) for k in ("municipality_candidate","county_candidate","national_text_match_only")},\n      "candidates":sorted(items.values(),key=lambda a:str(a.get("published") or ""),reverse=True)}
     OUT.parent.mkdir(exist_ok=True,parents=True)
     OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2,default=str)+"\n",encoding="utf-8")
     print("Results:",json.dumps({"attempts":attempts,"candidates":len(items)},ensure_ascii=False))
