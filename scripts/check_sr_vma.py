@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+"""Inspect Sveriges Radio VMA v3 API availability and response structure.
+
+Only schema/aggregate diagnostics are saved. Alert content, IDs and locations
+are NOT written to disk; archival reuse terms require separate verification.
+"""
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.request import Request, urlopen
+
+ENDPOINTS = {
+    "active_alerts": "https://vmaapi.sr.se/api/v3/alerts",
+    "swagger": "https://vmaapi.sr.se/swagger/v3.0/swagger.json"
+}
+OUTPUT = Path("data/sr_vma_diagnostics.json")
+
+def read_json(url):
+    req = Request(url, headers={"Accept": "application/json", "User-Agent": "Lulea-VMA-method-audit/1.0"})
+    with urlopen(req, timeout=30) as response:
+        return json.load(response)
+
+def main():
+    data = {
+        "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+        "purpose": "Connectivity and schema checks only, not historical VMA extraction",
+        "retains_alert_content": False,
+        "alerts": {},
+        "openapi": {}
+    }
+    try:
+        payload = read_json(ENDPOINTS["active_alerts"])
+        alerts = payload if isinstance(payload, list) else payload.get("alerts", []) if isinstance(payload, dict) else []
+        data["alerts"] = {
+            "ok": True,
+            "response_type": type(payload).__name__,
+            "top_level_keys": sorted(payload.keys()) if isinstance(payload, dict) else [],
+            "alerts_field_type": type(alerts).__name__,
+            "record_count_at_check": len(alerts) if isinstance(alerts, list) else None,
+            "record_field_names": sorted(alerts[0].keys()) if isinstance(alerts, list) and alerts and isinstance(alerts[0], dict) else []
+        }
+    except Exception as exc:
+        data["alerts"] = {"ok": False, "error_type": type(exc).__name__, "error": str(exc)[:160]}
+    try:
+        spec = read_json(ENDPOINTS["swagger"])
+        data["openapi"] = {
+            "ok": True,
+            "version": spec.get("openapi"),
+            "paths": sorted(spec.get("paths", {}).keys()),
+            "schemas": sorted(spec.get("components", {}).get("schemas", {}).keys())
+        }
+    except Exception as exc:
+        data["openapi"] = {"ok": False, "error_type": type(exc).__name__, "error": str(exc)[:160]}
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("SR VMA connectivity:", data["alerts"].get("ok"), "OpenAPI:", data["openapi"].get("ok"))
+    if not (data["alerts"].get("ok") and data["openapi"].get("ok")):
+        raise SystemExit("SR VMA diagnostics incomplete; inspect saved diagnostic JSON")
+
+if __name__ == "__main__":
+    main()
