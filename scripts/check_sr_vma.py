@@ -47,7 +47,9 @@ def main():
             "ok": True,
             "version": spec.get("openapi"),
             "paths": sorted(spec.get("paths", {}).keys()),
-            "schemas": sorted(spec.get("components", {}).get("schemas", {}).keys())
+            "schemas": sorted(spec.get("components", {}).get("schemas", {}).keys()),
+            "schema_fields": {name: sorted((spec.get("components", {}).get("schemas", {}).get(name) or {}).get("properties", {}).keys()) for name in ("Alert", "Info", "Area", "MsgType", "Status")},
+            "response_shapes": {path: sorted(list(operations.keys())) for path, operations in spec.get("paths", {}).items() if isinstance(operations, dict)}
         }
     except Exception as exc:
         data["openapi"] = {"ok": False, "error_type": type(exc).__name__, "error": str(exc)[:160]}
