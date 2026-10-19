@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-19T08:43:24.054522+00:00",
+  "checked_at_utc": "2026-10-19T08:53:17.438762+00:00",
   "purpose": "Connectivity and schema checks only, not historical VMA extraction",
   "retains_alert_content": false,
   "alerts": {
@@ -103,8 +103,62 @@
     }
   },
   "test_examples": {
-    "ok": false,
-    "error_type": "TypeError",
-    "error": "'NoneType' object is not iterable"
+    "ok": true,
+    "response_type": "dict",
+    "top_level_keys": [
+      "alerts",
+      "timestamp"
+    ],
+    "example_count": 6,
+    "alert_field_names": [
+      "identifier",
+      "incidents",
+      "info",
+      "msgType",
+      "note",
+      "references",
+      "scope",
+      "sender",
+      "sent",
+      "status"
+    ],
+    "info_field_names": [
+      "area",
+      "category",
+      "certainty",
+      "description",
+      "event",
+      "expires",
+      "instruction",
+      "language",
+      "parameters",
+      "responseType",
+      "senderName",
+      "severity",
+      "urgency",
+      "web"
+    ],
+    "area_field_names": [
+      "areaDesc",
+      "geocode"
+    ],
+    "geocode_field_names": [
+      "value",
+      "valueName"
+    ],
+    "message_types": [
+      "Alert",
+      "Cancel"
+    ],
+    "statuses": [
+      "Actual",
+      "Exercise",
+      "Test"
+    ],
+    "geocode_name_keys": [
+      "Kommun",
+      "Sverige"
+    ],
+    "stored_content": false
   }
 }
