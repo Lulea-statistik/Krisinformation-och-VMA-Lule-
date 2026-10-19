@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-19T08:23:06.648286+00:00",
+  "checked_at_utc": "2026-10-19T08:26:01.807507+00:00",
   "purpose": "Connectivity and schema checks only, not historical VMA extraction",
   "retains_alert_content": false,
   "alerts": {
@@ -41,6 +41,65 @@
       "Severity",
       "Status",
       "Urgency"
-    ]
+    ],
+    "schema_fields": {
+      "Alert": [
+        "identifier",
+        "incidents",
+        "info",
+        "msgType",
+        "note",
+        "references",
+        "scope",
+        "sender",
+        "sent",
+        "status"
+      ],
+      "Info": [
+        "area",
+        "category",
+        "certainty",
+        "description",
+        "event",
+        "expires",
+        "instruction",
+        "language",
+        "parameters",
+        "responseType",
+        "senderName",
+        "severity",
+        "urgency",
+        "web"
+      ],
+      "Area": [
+        "areaDesc",
+        "geocode"
+      ],
+      "MsgType": [],
+      "Status": []
+    },
+    "response_shapes": {
+      "/api/v3/alerts": [
+        "get"
+      ],
+      "/api/v3/alerts/feed.{format}": [
+        "get"
+      ],
+      "/api/v3/alert/{identifier}": [
+        "get"
+      ],
+      "/testapi/v3/alerts": [
+        "get"
+      ],
+      "/testapi/v3/alerts/feed.{format}": [
+        "get"
+      ],
+      "/testapi/v3/alert/{identifier}": [
+        "get"
+      ],
+      "/testapi/v3/examples/data": [
+        "get"
+      ]
+    }
   }
 }
