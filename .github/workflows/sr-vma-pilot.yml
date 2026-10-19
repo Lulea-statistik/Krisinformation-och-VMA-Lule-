@@ -1,0 +1,28 @@
+name: SR VMA produktionspilot
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera syntax
+        run: python -m py_compile scripts/sr_vma_pilot.py
+      - name: Hämta produktionsdiagnostik
+        run: python scripts/sr_vma_pilot.py
+      - name: Spara aggregerad diagnostik
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sr_vma_pilot.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record privacy-safe SR VMA pilot diagnostics"
+            git pull --rebase
+            git push
+          fi
