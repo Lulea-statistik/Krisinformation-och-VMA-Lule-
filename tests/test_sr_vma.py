@@ -13,6 +13,18 @@ def alert(code, status="Actual", kind="Alert", areas=None):
         {"geocode":[{"valueName":"Kommun","value":code}]}]}]}
 
 class FilterTests(unittest.TestCase):
+    def test_all_norrbotten_municipalities(self):
+        self.assertEqual(len(pilot.MUNICIPALITIES),14)
+        for code in pilot.MUNICIPALITIES:
+            with self.subTest(code=code):
+                self.assertEqual(pilot.matched_municipalities(alert(code)),{code})
+    def test_multiple_municipalities(self):
+        areas=[{"geocode":[{"valueName":"Kommun","value":"2580"},{"valueName":"Kommun","value":"2582"},{"valueName":"Kommun","value":"2580"}]}]
+        self.assertEqual(pilot.matched_municipalities(alert("",areas=areas)),{"2580","2582"})
+    def test_outside_county(self):
+        self.assertEqual(pilot.matched_municipalities(alert("2480")),set())
+    def test_update_message(self):
+        self.assertEqual(pilot.matched_municipalities(alert("2581",kind="Update")),{"2581"})
     def test_lulea(self):
         self.assertTrue(pilot.is_lulea_actual_alert(alert("2580")))
     def test_other_municipality(self):
