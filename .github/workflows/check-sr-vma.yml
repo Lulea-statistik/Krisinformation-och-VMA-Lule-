@@ -1,0 +1,31 @@
+name: Kontrollera Sveriges Radios VMA API
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera syntax
+        run: python -m py_compile scripts/check_sr_vma.py
+      - name: Testa API och dokumentation
+        run: python scripts/check_sr_vma.py
+      - name: Spara endast diagnostik
+        if: always()
+        run: |
+          if [ -f data/sr_vma_diagnostics.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/sr_vma_diagnostics.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Record SR VMA API structure check"
+              git pull --rebase
+              git push
+            fi
+          fi
