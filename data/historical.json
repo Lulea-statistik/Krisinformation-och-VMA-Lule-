@@ -13,5 +13,35 @@
     "url": "https://www.krisinformation.se/nyheter/2018/november/vma-lulea/",
     "source_type": "historisk artikel",
     "verified": true
+  },
+  {
+    "id": "krisinfo-2021-04-11-porson",
+    "date": "2021-04-11",
+    "end_date": "2021-04-11",
+    "title": "VMA vid industribrand på Porsön",
+    "type": "VMA",
+    "municipality": "Luleå",
+    "location": "Porsön",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/20212/april2/viktigt-meddelande-till-allmanheten-i-lulea-lulea-kommun-i-norrbottens-lanmanheten-i/",
+    "source_type": "historisk artikel",
+    "verified": true
+  },
+  {
+    "id": "krisinfo-2025-04-24-kallkallan",
+    "date": "2025-04-24",
+    "end_date": "2025-04-24",
+    "title": "VMA vid brand i parkeringshus i Kallkällan",
+    "type": "VMA",
+    "municipality": "Luleå",
+    "location": "Kallkällan",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/2025/april/vma-kallkallan-lulea/",
+    "source_type": "historisk artikel",
+    "verified": true
   }
 ]
