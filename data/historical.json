@@ -297,23 +297,6 @@
     "verified": true
   },
   {
-    "id": "krisinfo-2019-09-07-storheden",
-    "date": "2019-09-07",
-    "end_date": "2019-09-08",
-    "title": "VMA i Storheden, Luleå",
-    "municipality": "Luleå",
-    "municipality_code": "2580",
-    "location": "Storheden",
-    "category": "Ej närmare klassificerad",
-    "url": "https://www.krisinformation.se/nyheter/2019/",
-    "verification_note": "Årsarkiv 2019 anger VMA i Storheden, Luleå, återtaget 8 september kl 00.20; exakt publiceringsdatum och orsak kräver artikelsidans kontroll. Datum preliminärt.",
-    "type": "VMA",
-    "status": "Avslutad",
-    "source": "Krisinformation.se",
-    "source_type": "historisk artikel/årsarkiv",
-    "verified": false
-  },
-  {
     "id": "krisinfo-2026-06-01-heden",
     "date": "2026-06-01",
     "end_date": "2026-06-01",
