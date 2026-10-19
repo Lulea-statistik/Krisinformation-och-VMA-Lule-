@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-19T09:53:35.211545+00:00",
+  "checked_at_utc": "2026-10-19T10:57:22.077636+00:00",
   "source": "https://vmaapi.sr.se/api/v3/alerts",
   "mode": "read_only_aggregate_pilot",
   "public_alert_feed_enabled": false,
@@ -10,6 +10,79 @@
   "municipality_code_assumption": "Kommun value 2580 is assumed to mean Lulea; code-system definition still requires confirmation.",
   "production_count": 0,
   "actual_records_with_kommun_2580": 0,
+  "norrbotten_municipality_counts": [
+    {
+      "code": "2505",
+      "name": "Arvidsjaur",
+      "count": 0
+    },
+    {
+      "code": "2506",
+      "name": "Arjeplog",
+      "count": 0
+    },
+    {
+      "code": "2510",
+      "name": "Jokkmokk",
+      "count": 0
+    },
+    {
+      "code": "2513",
+      "name": "Överkalix",
+      "count": 0
+    },
+    {
+      "code": "2514",
+      "name": "Kalix",
+      "count": 0
+    },
+    {
+      "code": "2518",
+      "name": "Övertorneå",
+      "count": 0
+    },
+    {
+      "code": "2521",
+      "name": "Pajala",
+      "count": 0
+    },
+    {
+      "code": "2523",
+      "name": "Gällivare",
+      "count": 0
+    },
+    {
+      "code": "2560",
+      "name": "Älvsbyn",
+      "count": 0
+    },
+    {
+      "code": "2580",
+      "name": "Luleå",
+      "count": 0
+    },
+    {
+      "code": "2581",
+      "name": "Piteå",
+      "count": 0
+    },
+    {
+      "code": "2582",
+      "name": "Boden",
+      "count": 0
+    },
+    {
+      "code": "2583",
+      "name": "Haparanda",
+      "count": 0
+    },
+    {
+      "code": "2584",
+      "name": "Kiruna",
+      "count": 0
+    }
+  ],
+  "multi_municipality_note": "An alert matching multiple municipalities is counted once in each matching municipality. Not distinct incident counts.",
   "other_actual_records_needing_geographic_review": 0,
   "status_and_type_counts": {}
 }
