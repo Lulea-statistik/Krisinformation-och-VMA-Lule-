@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-19T08:29:49.285915+00:00",
+  "checked_at_utc": "2026-10-19T08:43:24.054522+00:00",
   "purpose": "Connectivity and schema checks only, not historical VMA extraction",
   "retains_alert_content": false,
   "alerts": {
@@ -103,13 +103,8 @@
     }
   },
   "test_examples": {
-    "ok": true,
-    "response_type": "dict",
-    "top_level_keys": [
-      "alerts",
-      "timestamp"
-    ],
-    "example_count": null,
-    "stored_content": false
+    "ok": false,
+    "error_type": "TypeError",
+    "error": "'NoneType' object is not iterable"
   }
 }
