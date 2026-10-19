@@ -57,9 +57,9 @@ def main():
         test = read_json("https://vmaapi.sr.se/testapi/v3/examples/data")
         # Record structure only. Test messages must never enter the public alerts feed.
         examples = test.get("alerts", []) if isinstance(test, dict) else test if isinstance(test, list) else []
-        info_objects = [info for alert in examples if isinstance(alert, dict) for info in alert.get("info", []) if isinstance(info, dict)]
-        areas = [area for info in info_objects for area in info.get("area", []) if isinstance(area, dict)]
-        geocodes = [geo for area in areas for geo in area.get("geocode", []) if isinstance(geo, dict)]
+        info_objects = [info for alert in examples if isinstance(alert, dict) for info in (alert.get("info") or []) if isinstance(info, dict)]
+        areas = [area for info in info_objects for area in (info.get("area") or []) if isinstance(area, dict)]
+        geocodes = [geo for area in areas for geo in (area.get("geocode") or []) if isinstance(geo, dict)]
         data["test_examples"] = {
             "ok": True,
             "response_type": type(test).__name__,
@@ -79,7 +79,7 @@ def main():
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("SR VMA connectivity:", data["alerts"].get("ok"), "OpenAPI:", data["openapi"].get("ok"))
-    if not (data["alerts"].get("ok") and data["openapi"].get("ok")):
+    if not (data["alerts"].get("ok") and data["openapi"].get("ok") and data["test_examples"].get("ok")):
         raise SystemExit("SR VMA diagnostics incomplete; inspect saved diagnostic JSON")
 
 if __name__ == "__main__":
