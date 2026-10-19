@@ -1,0 +1,38 @@
+[
+  {
+    "id": "candidate-2019-09-07-storheden-details",
+    "related_historical_id": "krisinfo-2019-09-07-storheden",
+    "municipality": "Luleå",
+    "date": "2019-09-07",
+    "issue": "Verifiera orsak, geografisk utbredning och originalartikeln; årsarkivet styrker datum och avslut.",
+    "source_url": "https://www.krisinformation.se/nyheter/2019/september/",
+    "review_status": "needs_detail_review"
+  },
+  {
+    "id": "candidate-2019-10-14-jokkmokk-details",
+    "related_historical_id": "krisinfo-2019-10-14-jokkmokk",
+    "municipality": "Jokkmokk",
+    "date": "2019-10-14",
+    "issue": "Verifiera orsak och område via artikel; årsarkivet styrker VMA och återtagande.",
+    "source_url": "https://www.krisinformation.se/nyheter/2019/",
+    "review_status": "needs_detail_review"
+  },
+  {
+    "id": "candidate-2015-02-02-ferruform-time",
+    "related_historical_id": "sr-2015-02-02-2580",
+    "municipality": "Luleå",
+    "date": "2015-02-02",
+    "issue": "Fastställ korrekt startdatum och avslutstid genom ytterligare källa.",
+    "source_url": "https://www.sverigesradio.se/artikel/6082722",
+    "review_status": "needs_detail_review"
+  },
+  {
+    "id": "candidate-2020-08-24-polarbrod-time",
+    "related_historical_id": "sr-2020-08-24-2560",
+    "municipality": "Älvsbyn",
+    "date": "2020-08-24",
+    "issue": "Verifiera exakt start- och avslutstid.",
+    "source_url": "https://www.sverigesradio.se/artikel/7539014",
+    "review_status": "needs_detail_review"
+  }
+]
