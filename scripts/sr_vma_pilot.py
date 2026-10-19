@@ -13,7 +13,26 @@ from urllib.request import Request, urlopen
 SOURCE = "https://vmaapi.sr.se/api/v3/alerts"
 OUTPUT = Path("data/sr_vma_pilot.json")
 
+MUNICIPALITIES = {"2505":"Arvidsjaur","2506":"Arjeplog","2510":"Jokkmokk","2513":"Överkalix","2514":"Kalix","2518":"Övertorneå","2521":"Pajala","2523":"Gällivare","2560":"Älvsbyn","2580":"Luleå","2581":"Piteå","2582":"Boden","2583":"Haparanda","2584":"Kiruna"}
+
+def matched_municipalities(alert):
+    if not isinstance(alert,dict) or alert.get("status")!="Actual" or alert.get("msgType") not in ("Alert","Update"):
+        return set()
+    codes=set()
+    for info in alert.get("info") or []:
+        if not isinstance(info,dict): continue
+        for area in info.get("area") or []:
+            if not isinstance(area,dict): continue
+            for geo in area.get("geocode") or []:
+                if isinstance(geo,dict) and str(geo.get("valueName") or "").strip().casefold()=="kommun":
+                    code=str(geo.get("value") or "").strip()
+                    if code in MUNICIPALITIES: codes.add(code)
+    return codes
+
 def is_lulea_actual_alert(alert):
+    return "2580" in matched_municipalities(alert)
+
+def legacy_is_lulea_actual_alert(alert):
     """Conservative municipality-code match; requires separate code-system verification."""
     if not isinstance(alert, dict) or alert.get("status") != "Actual":
         return False
@@ -40,6 +59,7 @@ def main():
     records = data["alerts"]
     diagnostics = Counter()
     municipality_matches = 0
+    municipality_counts = Counter()
     needs_review = 0
     for alert in records:
         if not isinstance(alert, dict):
@@ -51,7 +71,9 @@ def main():
         diagnostics["type_" + (msg_type if msg_type in ("Alert", "Update", "Cancel", "Ack", "Error") else "unknown")] += 1
         if status != "Actual":
             continue
-        found_local = is_lulea_actual_alert(alert)
+        codes = matched_municipalities(alert)
+        for code in codes: municipality_counts[code] += 1
+        found_local = "2580" in codes
         if found_local:
             municipality_matches += 1
         else:
@@ -68,6 +90,8 @@ def main():
       "municipality_code_assumption": "Kommun value 2580 is assumed to mean Lulea; code-system definition still requires confirmation.",
       "production_count": len(records),
       "actual_records_with_kommun_2580": municipality_matches,
+      "norrbotten_municipality_counts": [{"code":c,"name":n,"count":municipality_counts[c]} for c,n in sorted(MUNICIPALITIES.items())],
+      "multi_municipality_note": "An alert matching multiple municipalities is counted once in each matching municipality. Not distinct incident counts.",
       "other_actual_records_needing_geographic_review": needs_review,
       "status_and_type_counts": dict(sorted(diagnostics.items()))
     }
