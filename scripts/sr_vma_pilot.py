@@ -13,6 +13,23 @@ from urllib.request import Request, urlopen
 SOURCE = "https://vmaapi.sr.se/api/v3/alerts"
 OUTPUT = Path("data/sr_vma_pilot.json")
 
+def is_lulea_actual_alert(alert):
+    """Conservative municipality-code match; requires separate code-system verification."""
+    if not isinstance(alert, dict) or alert.get("status") != "Actual":
+        return False
+    if alert.get("msgType") not in ("Alert", "Update"):
+        return False
+    for info in alert.get("info") or []:
+        if not isinstance(info, dict):
+            continue
+        for area in info.get("area") or []:
+            if not isinstance(area, dict):
+                continue
+            for geo in area.get("geocode") or []:
+                if isinstance(geo, dict) and str(geo.get("valueName") or "").strip().casefold() == "kommun" and str(geo.get("value") or "").strip() == "2580":
+                    return True
+    return False
+
 def main():
     now = datetime.now(timezone.utc)
     with urlopen(Request(SOURCE, headers={"Accept": "application/json",
@@ -34,19 +51,7 @@ def main():
         diagnostics["type_" + (msg_type if msg_type in ("Alert", "Update", "Cancel", "Ack", "Error") else "unknown")] += 1
         if status != "Actual":
             continue
-        found_local = False
-        for info in alert.get("info") or []:
-            if not isinstance(info, dict):
-                continue
-            for area in info.get("area") or []:
-                if not isinstance(area, dict):
-                    continue
-                for geo in area.get("geocode") or []:
-                    if not isinstance(geo, dict):
-                        continue
-                    if str(geo.get("valueName") or "").strip().casefold() == "kommun":
-                        if str(geo.get("value") or "").strip() == "2580":
-                            found_local = True
+        found_local = is_lulea_actual_alert(alert)
         if found_local:
             municipality_matches += 1
         else:
