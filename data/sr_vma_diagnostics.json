@@ -1,0 +1,46 @@
+{
+  "checked_at_utc": "2026-10-19T08:23:06.648286+00:00",
+  "purpose": "Connectivity and schema checks only, not historical VMA extraction",
+  "retains_alert_content": false,
+  "alerts": {
+    "ok": true,
+    "response_type": "dict",
+    "top_level_keys": [
+      "alerts",
+      "timestamp"
+    ],
+    "alerts_field_type": "list",
+    "record_count_at_check": 0,
+    "record_field_names": []
+  },
+  "openapi": {
+    "ok": true,
+    "version": "3.0.1",
+    "paths": [
+      "/api/v3/alert/{identifier}",
+      "/api/v3/alerts",
+      "/api/v3/alerts/feed.{format}",
+      "/testapi/v3/alert/{identifier}",
+      "/testapi/v3/alerts",
+      "/testapi/v3/alerts/feed.{format}",
+      "/testapi/v3/examples/data"
+    ],
+    "schemas": [
+      "Alert",
+      "Area",
+      "CapAlertFeed",
+      "Category",
+      "Certainty",
+      "GeoCodeValueName",
+      "Geocode",
+      "Info",
+      "MsgType",
+      "Parameter",
+      "ResponseType",
+      "Scope",
+      "Severity",
+      "Status",
+      "Urgency"
+    ]
+  }
+}
