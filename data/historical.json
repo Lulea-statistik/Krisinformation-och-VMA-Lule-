@@ -382,5 +382,23 @@
     "verified": true,
     "verification_level": "contemporary_media",
     "verification_note": "SVT-artikel publicerad 25 juli 2021 (uppdaterad 26 juli) uppger uttryckligen att ett VMA utfärdades; avslutstid saknas."
+  },
+  {
+    "id": "svt-2022-11-25-gallivare-lokstall",
+    "date": "2022-11-25",
+    "end_date": "2022-11-25",
+    "title": "VMA vid brand i lokstall i Gällivare",
+    "type": "VMA",
+    "municipality": "Gällivare",
+    "municipality_code": "2523",
+    "location": "Centrala Gällivare och Malmberget",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "SVT Nyheter",
+    "url": "https://www.svt.se/nyheter/lokalt/norrbotten/storbrand-harjar-i-gallivare-vma-utfardat",
+    "source_type": "samtida nyhetsartikel",
+    "verified": true,
+    "verification_level": "contemporary_media_two_sources",
+    "verification_note": "SVT publicerad 25 nov 2022 bekräftar VMA och återtagande kl 22.32 samma dag. Sveriges Radio (https://www.sverigesradio.se/artikel/fullt-utvecklad-brand-i-gallivare-alla-i-omradet-uppmanas-att-ga-inomhus) bekräftar samma händelse. Starttid ej exakt verifierad."
   }
 ]
