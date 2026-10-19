@@ -348,5 +348,39 @@
     "status": "Avslutad",
     "verified": true,
     "verification_level": "archive_confirmed"
+  },
+  {
+    "id": "hbwebben-2019-08-01-kalix",
+    "date": "2019-08-01",
+    "title": "VMA vid brand i Götamagasinet i Kalix",
+    "type": "VMA",
+    "municipality": "Kalix",
+    "municipality_code": "2514",
+    "location": "Torggatan, centrala Kalix",
+    "category": "Brand och rök",
+    "status": "Historisk, avslutstid ej verifierad",
+    "source": "HBwebben",
+    "url": "https://hbwebben.se/kraftig-brand-harjar-i-kladbutik/",
+    "source_type": "samtida nyhetsartikel",
+    "verified": true,
+    "verification_level": "contemporary_media",
+    "verification_note": "Samtida artikel daterad 1 augusti 2019 bekräftar uttryckligen VMA om brandrök; inget avslut kan styrkas med källan."
+  },
+  {
+    "id": "svt-2021-07-25-pajala",
+    "date": "2021-07-25",
+    "title": "VMA vid brand på gruppboende i Pajala",
+    "type": "VMA",
+    "municipality": "Pajala",
+    "municipality_code": "2521",
+    "location": "Gruppboende i Pajala, närmare område ej verifierat",
+    "category": "Brand och rök",
+    "status": "Historisk, avslutstid ej verifierad",
+    "source": "SVT Nyheter",
+    "url": "https://www.svt.se/nyheter/lokalt/norrbotten/brand-pa-gruppboende-i-pajala",
+    "source_type": "samtida nyhetsartikel",
+    "verified": true,
+    "verification_level": "contemporary_media",
+    "verification_note": "SVT-artikel publicerad 25 juli 2021 (uppdaterad 26 juli) uppger uttryckligen att ett VMA utfärdades; avslutstid saknas."
   }
 ]
