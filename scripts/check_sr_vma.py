@@ -53,6 +53,18 @@ def main():
         }
     except Exception as exc:
         data["openapi"] = {"ok": False, "error_type": type(exc).__name__, "error": str(exc)[:160]}
+    try:
+        test = read_json("https://vmaapi.sr.se/testapi/v3/examples/data")
+        # Record structure only. Test messages must never enter the public alerts feed.
+        data["test_examples"] = {
+            "ok": True,
+            "response_type": type(test).__name__,
+            "top_level_keys": sorted(test.keys()) if isinstance(test, dict) else [],
+            "example_count": len(test) if isinstance(test, list) else None,
+            "stored_content": False
+        }
+    except Exception as exc:
+        data["test_examples"] = {"ok": False, "error_type": type(exc).__name__, "error": str(exc)[:160]}
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("SR VMA connectivity:", data["alerts"].get("ok"), "OpenAPI:", data["openapi"].get("ok"))
