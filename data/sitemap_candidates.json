@@ -1,0 +1,24 @@
+{
+  "generated_utc": "2026-10-19T08:05:26.029237+00:00",
+  "status": "discovery_only",
+  "warning": "Sitemaps may omit historical pages. Candidate URLs do not establish a formal VMA or Lulea relevance.",
+  "sitemap_checks": [
+    {
+      "url": "https://www.krisinformation.se/sitemap.xml",
+      "ok": false,
+      "error": "encoding specified in XML declaration is incorrect: line 1, column 30"
+    },
+    {
+      "url": "https://www.krisinformation.se/sitemap_index.xml",
+      "ok": false,
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "errors": [],
+  "urls_discovered": 0,
+  "queue_remaining": 0,
+  "sitemap_limit_reached": false,
+  "url_limit_reached": false,
+  "candidate_count": 0,
+  "candidates": []
+}
