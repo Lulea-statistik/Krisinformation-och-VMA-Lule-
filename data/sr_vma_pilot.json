@@ -1,0 +1,15 @@
+{
+  "checked_at_utc": "2026-10-19T09:38:27.910651+00:00",
+  "source": "https://vmaapi.sr.se/api/v3/alerts",
+  "mode": "read_only_aggregate_pilot",
+  "public_alert_feed_enabled": false,
+  "retains_alert_content": false,
+  "retains_alert_identifiers": false,
+  "retains_location_codes": false,
+  "coverage_note": "Current production snapshot only, not historical completeness.",
+  "municipality_code_assumption": "Kommun value 2580 is assumed to mean Lulea; code-system definition still requires confirmation.",
+  "production_count": 0,
+  "actual_records_with_kommun_2580": 0,
+  "other_actual_records_needing_geographic_review": 0,
+  "status_and_type_counts": {}
+}
