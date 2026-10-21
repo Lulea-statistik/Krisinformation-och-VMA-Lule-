@@ -12,7 +12,10 @@
     "source": "Krisinformation.se",
     "url": "https://www.krisinformation.se/nyheter/2018/november/vma-lulea/",
     "source_type": "historisk artikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Industri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2021-04-11-porson",
@@ -27,7 +30,10 @@
     "source": "Krisinformation.se",
     "url": "https://www.krisinformation.se/nyheter/20212/april2/viktigt-meddelande-till-allmanheten-i-lulea-lulea-kommun-i-norrbottens-lanmanheten-i/",
     "source_type": "historisk artikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Industri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2025-04-24-kallkallan",
@@ -42,7 +48,10 @@
     "source": "Krisinformation.se",
     "url": "https://www.krisinformation.se/nyheter/2025/april/vma-kallkallan-lulea/",
     "source_type": "historisk artikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Parkeringsanläggning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2017-06-20-2584",
@@ -62,7 +71,10 @@
     "verification_note": "MSB Analys av VMA 2017 ref 20 redovisar separat VMA information 20 juni. Återtaget före nytt VMA 21 juni. Exakt start- och sluttid ej fastställd.",
     "incident_id": "kiruna-avfallsbrand-2017-06",
     "vma_subtype": "information",
-    "verification_level": "official_msb_report"
+    "verification_level": "official_msb_report",
+    "event_type": "Brand",
+    "facility_type": "Avfallsanläggning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2018-08-01-2582",
@@ -79,7 +91,10 @@
     "url": "https://www.krisinformation.se/nyheter/2018/augusti/vma-till-allmanheten-i-boden/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Brand",
+    "facility_type": "Avfallsanläggning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2022-07-19-2581",
@@ -96,7 +111,10 @@
     "url": "https://www.krisinformation.se/nyheter/2022/juli/vma-storsund/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Okänd",
+    "facility_type": "Okänd plats/anläggning",
+    "classification_status": "behöver källkontroll"
   },
   {
     "id": "krisinfo-2023-06-16-2580",
@@ -113,7 +131,10 @@
     "url": "https://www.krisinformation.se/nyheter/2023/juni/vma-lulea/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Okänd",
+    "facility_type": "Okänd plats/anläggning",
+    "classification_status": "behöver källkontroll"
   },
   {
     "id": "krisinfo-2024-03-11-2584",
@@ -130,7 +151,10 @@
     "url": "https://www.krisinformation.se/nyheter/20242/mars/viktigt-meddelande-till-allmanheten-i-kiruna/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Brand",
+    "facility_type": "Okänd byggnad/anläggning",
+    "classification_status": "delvis klassificerad"
   },
   {
     "id": "krisinfo-2024-09-21-2514",
@@ -147,7 +171,10 @@
     "url": "https://www.krisinformation.se/nyheter/20242/september/vma-kalix-och-grytnas-i-kalix-kommun/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Brand",
+    "facility_type": "Sågverk",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2025-06-13-2581",
@@ -164,7 +191,10 @@
     "url": "https://www.krisinformation.se/nyheter/2025/juni/vma-pitea/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid.",
+    "event_type": "Brand",
+    "facility_type": "Industri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2017-07-01-2523",
@@ -181,7 +211,10 @@
     "source": "Krisinformation.se",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig."
+    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig.",
+    "event_type": "Brand",
+    "facility_type": "Avfallsanläggning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2018-08-12-2521",
@@ -198,7 +231,10 @@
     "source": "Krisinformation.se",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig."
+    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig.",
+    "event_type": "Brand",
+    "facility_type": "Bostad/boende",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2018-08-31-2505",
@@ -215,7 +251,10 @@
     "source": "Krisinformation.se",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig."
+    "verification_note": "Publiceringsdatum och avslut dokumenteras av originalartikeln; datatäckningen är ofullständig.",
+    "event_type": "Dricksvatten",
+    "facility_type": "Vattenförsörjning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "sr-2013-09-10-2581",
@@ -231,7 +270,10 @@
     "type": "VMA",
     "source": "Sveriges Radio",
     "source_type": "historisk nyhetsartikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Restaurang",
+    "classification_status": "klassificerad"
   },
   {
     "id": "sr-2015-02-02-2580",
@@ -247,7 +289,10 @@
     "type": "VMA",
     "source": "Sveriges Radio",
     "source_type": "historisk nyhetsartikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Industri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "sr-2020-08-24-2560",
@@ -263,7 +308,10 @@
     "type": "VMA",
     "source": "Sveriges Radio",
     "source_type": "historisk nyhetsartikel",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Livsmedelsindustri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2019-04-18-lulea",
@@ -280,7 +328,10 @@
     "status": "Avslutad",
     "source": "Krisinformation.se",
     "source_type": "historisk artikel/årsarkiv",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Okänd byggnad/anläggning",
+    "classification_status": "delvis klassificerad"
   },
   {
     "id": "krisinfo-2019-10-15-gallivare",
@@ -297,7 +348,10 @@
     "status": "Avslutad",
     "source": "Krisinformation.se",
     "source_type": "historisk artikel/årsarkiv",
-    "verified": true
+    "verified": true,
+    "event_type": "Gasutsläpp",
+    "facility_type": "Industri/anläggning (ospecificerad)",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2026-06-01-heden",
@@ -314,7 +368,10 @@
     "status": "Avslutad",
     "source": "Krisinformation.se",
     "source_type": "historisk artikel/årsarkiv",
-    "verified": true
+    "verified": true,
+    "event_type": "Brand",
+    "facility_type": "Fordon",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2019-09-07-storheden",
@@ -332,7 +389,10 @@
     "type": "VMA",
     "status": "Avslutad",
     "verified": true,
-    "verification_level": "archive_confirmed"
+    "verification_level": "archive_confirmed",
+    "event_type": "Okänd",
+    "facility_type": "Okänd plats/anläggning",
+    "classification_status": "behöver källkontroll"
   },
   {
     "id": "krisinfo-2019-10-14-jokkmokk",
@@ -350,7 +410,10 @@
     "type": "VMA",
     "status": "Avslutad",
     "verified": true,
-    "verification_level": "archive_confirmed"
+    "verification_level": "archive_confirmed",
+    "event_type": "Okänd",
+    "facility_type": "Okänd plats/anläggning",
+    "classification_status": "behöver källkontroll"
   },
   {
     "id": "hbwebben-2019-08-01-kalix",
@@ -367,7 +430,10 @@
     "source_type": "samtida nyhetsartikel",
     "verified": true,
     "verification_level": "contemporary_media",
-    "verification_note": "Samtida artikel daterad 1 augusti 2019 bekräftar uttryckligen VMA om brandrök; inget avslut kan styrkas med källan."
+    "verification_note": "Samtida artikel daterad 1 augusti 2019 bekräftar uttryckligen VMA om brandrök; inget avslut kan styrkas med källan.",
+    "event_type": "Brand",
+    "facility_type": "Butik/handel",
+    "classification_status": "klassificerad"
   },
   {
     "id": "svt-2021-07-25-pajala",
@@ -384,7 +450,10 @@
     "source_type": "samtida nyhetsartikel",
     "verified": true,
     "verification_level": "contemporary_media",
-    "verification_note": "SVT-artikel publicerad 25 juli 2021 (uppdaterad 26 juli) uppger uttryckligen att ett VMA utfärdades; avslutstid saknas."
+    "verification_note": "SVT-artikel publicerad 25 juli 2021 (uppdaterad 26 juli) uppger uttryckligen att ett VMA utfärdades; avslutstid saknas.",
+    "event_type": "Brand",
+    "facility_type": "Bostad/boende",
+    "classification_status": "klassificerad"
   },
   {
     "id": "svt-2022-11-25-gallivare-lokstall",
@@ -402,7 +471,10 @@
     "source_type": "samtida nyhetsartikel",
     "verified": true,
     "verification_level": "contemporary_media_two_sources",
-    "verification_note": "SVT publicerad 25 nov 2022 bekräftar VMA och återtagande kl 22.32 samma dag. Sveriges Radio (https://www.sverigesradio.se/artikel/fullt-utvecklad-brand-i-gallivare-alla-i-omradet-uppmanas-att-ga-inomhus) bekräftar samma händelse. Starttid ej exakt verifierad."
+    "verification_note": "SVT publicerad 25 nov 2022 bekräftar VMA och återtagande kl 22.32 samma dag. Sveriges Radio (https://www.sverigesradio.se/artikel/fullt-utvecklad-brand-i-gallivare-alla-i-omradet-uppmanas-att-ga-inomhus) bekräftar samma händelse. Starttid ej exakt verifierad.",
+    "event_type": "Brand",
+    "facility_type": "Järnvägsanläggning",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2021-03-31-morjarv",
@@ -420,7 +492,10 @@
     "source_type": "officiellt månadsarkiv",
     "verified": true,
     "verification_level": "archive_confirmed",
-    "verification_note": "Officiellt månadsarkiv 31 mars 2021: publicerat 06.07, återtaget 13.19. Artikellänk returnerar 410; kommun Kalix baserad på Morjärvs ortstillhörighet. Tider gäller publicering/återtagande, ej nödvändigtvis faktisk VMA-start."
+    "verification_note": "Officiellt månadsarkiv 31 mars 2021: publicerat 06.07, återtaget 13.19. Artikellänk returnerar 410; kommun Kalix baserad på Morjärvs ortstillhörighet. Tider gäller publicering/återtagande, ej nödvändigtvis faktisk VMA-start.",
+    "event_type": "Brand",
+    "facility_type": "Industri",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2024-05-28-arvidsjaur",
@@ -438,7 +513,10 @@
     "source_type": "historisk artikel",
     "verified": true,
     "verification_level": "official_article",
-    "verification_note": "Publicerat 28 maj 2024 14.25; återtaget 20.20 enligt Krisinformation.se. Tider gäller publicering/återtagande."
+    "verification_note": "Publicerat 28 maj 2024 14.25; återtaget 20.20 enligt Krisinformation.se. Tider gäller publicering/återtagande.",
+    "event_type": "Brand",
+    "facility_type": "Butik/handel",
+    "classification_status": "klassificerad"
   },
   {
     "id": "krisinfo-2017-06-21-2584",
@@ -458,6 +536,9 @@
     "source_type": "officiell VMA-utvärdering",
     "verified": true,
     "verification_level": "official_msb_report",
-    "verification_note": "MSB Analys av VMA 2017 ref 21 dokumenterar nytt VMA information 21 juni efter att meddelandet från 20 juni återtagits. Krisinformation.se anger att faran var över 22 juni. Samma bakomliggande brand som föregående dygn."
+    "verification_note": "MSB Analys av VMA 2017 ref 21 dokumenterar nytt VMA information 21 juni efter att meddelandet från 20 juni återtagits. Krisinformation.se anger att faran var över 22 juni. Samma bakomliggande brand som föregående dygn.",
+    "event_type": "Brand",
+    "facility_type": "Avfallsanläggning",
+    "classification_status": "klassificerad"
   }
 ]
