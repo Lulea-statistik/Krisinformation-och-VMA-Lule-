@@ -24,14 +24,14 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 
 <section class="panel" style="margin-top:1rem" aria-labelledby="event-types-title">
 <h2 id="event-types-title">VMA i Sverige – fördelning efter händelsetyp och plats/anläggning</h2>
-<p>Riket, 2017–2026. Preliminär klassificering av 365 läsbara poster med datum och källänk från Krisinformations sammanställning. Diagrammen påverkas inte av kommunvalet i historiktabellen.</p>
+<p>Riket, från 2017. Diagrammen läser en separat statistikfil och påverkas inte av kommunvalet. Historiska uppgifter uppdateras ännu inte automatiskt med nya VMA; datatäckningen och senaste dataversion visas nedan.</p>
 <h3>Händelsetyp – antal och andel av samtliga VMA</h3>
 <div id="event-type-bars" aria-live="polite"></div>
 <h3>Brand – andel per plats- eller anläggningstyp</h3>
 <div id="fire-facility-bars" aria-live="polite"></div>
 <p class="data-note" id="fire-denominator"></p>
 <p class="data-note"><strong>Klassificeringsregel:</strong> Både händelsetyp och plats-/anläggningstyp kan vara <strong>Övrigt</strong> när uppgiften är känd men ingen särskild kategori passar. <strong>Okänd</strong> används endast när underlaget inte räcker. Övrigt och Okänd ska inte slås samman. En underkategori kan alltså vara Övrigt även när huvudkategorin är exempelvis Brand.</p>
-<p class="data-note">Andel för brandtyper beräknas bland 289 brandklassade VMA-poster i Sverige. Kategoriseringen är en preliminär textklassning av Krisinformations beskrivningar, inte en verifierad nationell förteckning över unika larm. Materialet är ofullständigt för 2026; 11 av cirka 376 tidigare uppskattade rader saknar tillräckligt maskinläsbart datum och källänk i denna första extraktion.</p>
+<p class="data-note">Andel för brandtyper beräknas bland brandklassade VMA-poster i Sverige. Kategoriseringen är en preliminär textklassning av Krisinformations beskrivningar, inte en verifierad nationell förteckning över unika larm. Materialet är ofullständigt för 2026; 11 av cirka 376 tidigare uppskattade rader saknar tillräckligt maskinläsbart datum och källänk i denna första extraktion.</p>
 </section>
 <section class="panel" style="margin-top:1rem" aria-labelledby="history-title">
 <h2 id="history-title">Historiska VMA – Norrbotten</h2>
@@ -77,11 +77,22 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
       const bar=document.createElement('div');bar.style.height='100%';bar.style.width=share+'%';bar.style.background=targetId==='fire-facility-bars'?'#64748B':'#a61d32';track.append(bar);wrap.append(track);target.append(wrap);
     }
    }
-   const nationalTypes=[['Brand',289],['Farligt föremål/explosion',26],['Dricksvatten',14],['Övrigt',14],['Utsläpp',11],['Väder/naturhändelse',6],['Teknisk störning',3],['Okänd',2]];
-   const nationalFires=[['Industri',94],['Okänd',65],['Avfall/återvinning',47],['Bostad/boende',30],['Natur/skog',15],['Butik/handel',10],['Skola',8],['Fordon/transport',7],['Parkering/garage',6],['Restaurang',4],['Övrigt',3]];
-   drawBars('event-type-bars',nationalTypes,365);
-   drawBars('fire-facility-bars',nationalFires,289);
-   document.getElementById('fire-denominator').textContent='Riket: 289 brandklassade poster av 365 inlästa VMA-poster (79,2 %). Källa: Krisinformations Excelstatistik 2017–2026. Preliminär kategorisering.';
+   // Nationwide values are loaded independently of the selected Norrbotten municipality.
+   if(!window.nationalChartsLoaded){
+     window.nationalChartsLoaded=true;
+     fetch('./data/national_vma_statistics.json',{cache:'no-store'}).then(response=>{
+       if(!response.ok)throw new Error('HTTP '+response.status);
+       return response.json();
+     }).then(stats=>{
+       if(!Number.isFinite(stats.total)||!stats.event_types||!stats.fire_facility_types)throw new Error('Invalid national statistics');
+       const types=Object.entries(stats.event_types);
+       const fires=Object.entries(stats.fire_facility_types);
+       drawBars('event-type-bars',types,stats.total);
+       drawBars('fire-facility-bars',fires,stats.fire_total);
+       const share=stats.total>0?new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(stats.fire_total/stats.total*100):'–';
+       document.getElementById('fire-denominator').textContent='Riket: '+stats.fire_total+' brandklassade poster av '+stats.total+' inlästa VMA-poster ('+share+' %). Senaste dataversion: '+(stats.updated_at||'okänd')+'. Historiskt underlag: '+(stats.status==='historical_baseline_not_automatically_updated'?'ännu inte automatiskt uppdaterat.':'uppdaterat från datakälla.');
+     }).catch(()=>{document.getElementById('fire-denominator').textContent='Nationell statistik kunde inte läsas. Senaste värden saknas.';});
+   }
    if(!records.length){const tr=document.createElement('tr');const cell=td(tr,'Inga granskade poster registrerade för '+name+'. Detta innebär inte att VMA saknats.');cell.colSpan=5;body.append(tr);return;}
    for(const e of records){const tr=document.createElement('tr');td(tr,e.date);td(tr,e.title);td(tr,e.location);td(tr,e.status);
     const cell=document.createElement('td');
