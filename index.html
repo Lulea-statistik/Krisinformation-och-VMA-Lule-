@@ -31,6 +31,16 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 <div class="table-scroll"><table><thead><tr><th>År</th><th>VMA-meddelanden</th><th>Bakomliggande händelser</th></tr></thead><tbody id="stats-years"><tr><td colspan="3">Läser statistik…</td></tr></tbody></table></div>
 <p class="data-note">Årsvisa händelseantal hänförs till året för första registrerade VMA i varje händelsegrupp. Händelse-ID används bara där gemensam bakomliggande händelse har belagts. Skillnaden är bland annat Kiruna 20 och 21 juni 2017: två VMA, en brand. Saknade registreringar betyder inte att VMA saknades.</p>
 </section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="event-types-title">
+<h2 id="event-types-title">VMA efter händelsetyp och plats/anläggning</h2>
+<p>Diagrammen räknar registrerade VMA-meddelanden, inte unika bakomliggande händelser. Kommunvalet i historiktabellen styr även fördelningen här.</p>
+<h3>Händelsetyp – antal och andel av samtliga VMA</h3>
+<div id="event-type-bars" aria-live="polite"></div>
+<h3>Brand – andel per plats- eller anläggningstyp</h3>
+<div id="fire-facility-bars" aria-live="polite"></div>
+<p class="data-note" id="fire-denominator"></p>
+<p class="data-note">Andel för brandtyper beräknas endast bland brandklassade VMA. Samma brand kan ge flera VMA: Kiruna 20–21 juni 2017 ger två meddelanden i kategorin Avfallsanläggning. Okänd klassificering redovisas separat, aldrig som noll bränder. Kategorierna bygger på källbelagd händelsebeskrivning och kan kompletteras efter ny källgranskning.</p>
+</section>
 <section class="panel" style="margin-top:1rem" aria-labelledby="history-title">
 <h2 id="history-title">Historiska VMA – Norrbotten</h2>
 <p>Urval av registrerade historiska poster, inte en fullständig tidsserie. Luleå visas som standard. Övriga kommuner får innehåll när källgranskade poster har lagts till.</p>
@@ -60,6 +70,26 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
    const name=municipalities[select.value];
    const records=all.filter(e=>e.verified===true && (e.municipality_code===select.value || (e.municipality===name && !e.municipality_code))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
    count.textContent=records.length+' registrerade poster (ofullständigt urval)';
+
+   function drawBars(targetId,rows,total){
+    const target=document.getElementById(targetId);target.replaceChildren();
+    if(!total){target.textContent='Inga klassificerade poster för kommunen.';return;}
+    for(const [name,n] of rows.sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0],'sv'))){
+      const share=n/total*100,wrap=document.createElement('div');wrap.style.margin='0 0 .8rem';
+      const line=document.createElement('div');line.style.display='flex';line.style.justifyContent='space-between';line.style.gap='1rem';
+      const label=document.createElement('span');label.textContent=name;
+      const val=document.createElement('strong');val.textContent=n+' ('+new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(share)+' %)';
+      line.append(label,val);wrap.append(line);
+      const track=document.createElement('div');track.style.height='12px';track.style.background='#e2e7eb';track.style.borderRadius='6px';track.style.overflow='hidden';
+      const bar=document.createElement('div');bar.style.height='100%';bar.style.width=share+'%';bar.style.background='#a61d32';track.append(bar);wrap.append(track);target.append(wrap);
+    }
+   }
+   const tally=(list,field)=>[...list.reduce((m,e)=>m.set(e[field]||'Okänd',(m.get(e[field]||'Okänd')||0)+1),new Map()).entries()];
+   drawBars('event-type-bars',tally(records,'event_type'),records.length);
+   const fires=records.filter(e=>e.event_type==='Brand');
+   drawBars('fire-facility-bars',tally(fires,'facility_type'),fires.length);
+   document.getElementById('fire-denominator').textContent='Nämnare: '+fires.length+' brandklassade VMA av '+records.length+' registrerade VMA i kommunen.';
+
    const incidentId=e=>String(e.incident_id||e.id);
    document.getElementById('stat-messages').textContent=String(records.length);
    document.getElementById('stat-incidents').textContent=String(new Set(records.map(incidentId)).size);
