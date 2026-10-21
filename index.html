@@ -64,7 +64,7 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
    document.getElementById('stat-messages').textContent=String(records.length);
    document.getElementById('stat-incidents').textContent=String(new Set(records.map(incidentId)).size);
    const yearly=new Map();
-   for(const e of records){const year=String(e.date||'').slice(0,4);if(!/^\\d{4}$/.test(year))continue;if(!yearly.has(year))yearly.set(year,{messages:0,incidents:new Set()});yearly.get(year).messages++;yearly.get(year).incidents.add(incidentId(e));}
+   for(const e of records){const year=String(e.date||'').slice(0,4);if(!/^[0-9]{4}$/.test(year))continue;if(!yearly.has(year))yearly.set(year,{messages:0,incidents:new Set()});yearly.get(year).messages++;yearly.get(year).incidents.add(incidentId(e));}
    const yearsBody=document.getElementById('stats-years');yearsBody.replaceChildren();
    for(const [year,stat] of [...yearly.entries()].sort((a,b)=>b[0].localeCompare(a[0]))){const tr=document.createElement('tr');td(tr,year);td(tr,stat.messages);td(tr,stat.incidents.size);yearsBody.append(tr);}
    if(!yearly.size){const tr=document.createElement('tr');const cell=td(tr,'Inga registrerade händelser för kommunen.');cell.colSpan=3;yearsBody.append(tr);}
