@@ -20,17 +20,8 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 <article class="panel"><h2>Statistik</h2><p>Diagram över händelser per år, månad och typ utvecklas efter att datatäckningen verifierats. Uppdateringar av samma VMA ska inte dubbelräknas.</p></article>
 <article class="panel"><h2>Karta</h2><p>Planerad indelning: Luleå kommun, övriga Norrbotten och nationella händelser. Länsövergripande varningar ska inte räknas som enbart Luleåhändelser.</p></article>
 </section>
-<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small></section>
-<section class="panel" style="margin-top:1rem" aria-labelledby="stats-title">
-<h2 id="stats-title">VMA-statistik – meddelanden och händelser</h2>
-<p>Statistiken avser enbart källgranskade historiska poster och är inte en fullständig förteckning. Välj kommun under historiken för att även filtrera denna sammanställning.</p>
-<div class="grid" aria-live="polite">
-<div class="panel"><h2>Antal VMA-meddelanden</h2><strong id="stat-messages">–</strong><p class="data-note">Separata utfärdade VMA räknas var för sig.</p></div>
-<div class="panel"><h2>Antal bakomliggande händelser</h2><strong id="stat-incidents">–</strong><p class="data-note">Poster med samma verifierade händelse-ID räknas en gång. Övriga registreringar räknas tills vidare var för sig.</p></div>
-</div>
-<div class="table-scroll"><table><thead><tr><th>År</th><th>VMA-meddelanden</th><th>Bakomliggande händelser</th></tr></thead><tbody id="stats-years"><tr><td colspan="3">Läser statistik…</td></tr></tbody></table></div>
-<p class="data-note">Årsvisa händelseantal hänförs till året för första registrerade VMA i varje händelsegrupp. Händelse-ID används bara där gemensam bakomliggande händelse har belagts. Skillnaden är bland annat Kiruna 20 och 21 juni 2017: två VMA, en brand. Saknade registreringar betyder inte att VMA saknades.</p>
-</section>
+
+
 <section class="panel" style="margin-top:1rem" aria-labelledby="event-types-title">
 <h2 id="event-types-title">VMA i Sverige – fördelning efter händelsetyp och plats/anläggning</h2>
 <p>Riket, 2017–2026. Preliminär klassificering av 365 läsbara poster med datum och källänk från Krisinformations sammanställning. Diagrammen påverkas inte av kommunvalet i historiktabellen.</p>
@@ -54,6 +45,17 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 <p id="pilot-status">Läser diagnostik…</p>
 <p class="data-note">Detta är en timvis teknisk kontroll, inte en direktsänd varningstjänst. Den sparar inga VMA-texter och ger inte ett historiskt händelseantal. Kontrollera alltid aktuella varningar hos <a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Krisinformation.se</a>.</p>
 </section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="stats-title">
+<h2 id="stats-title">VMA-statistik – meddelanden och händelser</h2>
+<p>Statistiken avser enbart källgranskade historiska poster och är inte en fullständig förteckning. Välj kommun under historiken för att även filtrera denna sammanställning.</p>
+<div class="grid" aria-live="polite">
+<div class="panel"><h2>Antal VMA-meddelanden</h2><strong id="stat-messages">–</strong><p class="data-note">Separata utfärdade VMA räknas var för sig.</p></div>
+<div class="panel"><h2>Antal bakomliggande händelser</h2><strong id="stat-incidents">–</strong><p class="data-note">Poster med samma verifierade händelse-ID räknas en gång. Övriga registreringar räknas tills vidare var för sig.</p></div>
+</div>
+<div class="table-scroll"><table><thead><tr><th>År</th><th>VMA-meddelanden</th><th>Bakomliggande händelser</th></tr></thead><tbody id="stats-years"><tr><td colspan="3">Läser statistik…</td></tr></tbody></table></div>
+<p class="data-note">Årsvisa händelseantal hänförs till året för första registrerade VMA i varje händelsegrupp. Händelse-ID används bara där gemensam bakomliggande händelse har belagts. Skillnaden är bland annat Kiruna 20 och 21 juni 2017: två VMA, en brand. Saknade registreringar betyder inte att VMA saknades.</p>
+</section>
+<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small></section>
 <script>
 (async function(){
  const municipalities={"2505":"Arvidsjaur","2506":"Arjeplog","2510":"Jokkmokk","2513":"Överkalix","2514":"Kalix","2518":"Övertorneå","2521":"Pajala","2523":"Gällivare","2560":"Älvsbyn","2580":"Luleå","2581":"Piteå","2582":"Boden","2583":"Haparanda","2584":"Kiruna"};
