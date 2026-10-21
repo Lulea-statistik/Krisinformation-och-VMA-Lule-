@@ -11,14 +11,14 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 </style>
 </head>
 <body>
-<header><div class="pill">Under uppbyggnad</div><h1>Krisinformation och VMA – Luleå</h1><p>En fristående sammanställning med fokus på Luleå kommun, Norrbotten och historiska händelser.</p></header>
+<header><h1>Krisinformation och VMA – Luleå</h1><p>En fristående sammanställning med fokus på Luleå kommun, Norrbotten och historiska händelser.</p></header>
 <main>
 <div class="notice"><strong>Ingen direktsänd varningstjänst.</strong> Denna sida visar ännu inga verifierade aktuella VMA. För gällande varningar och myndighetsinformation, besök <a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Krisinformation.se</a> eller lyssna på Sveriges Radio P4. Vid akut fara, ring 112.</div>
 <section class="grid" aria-label="Sidor och funktioner">
 <article class="panel"><h2>Aktuella VMA</h2><p>Automatisk inläsning och verifiering av aktiva meddelanden planeras. Inga aktuella meddelanden visas ännu.</p><a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Se officiella VMA ↗</a></article>
 <article class="panel"><h2>Historiska händelser</h2><p>Historik så långt tillbaka som tillförlitliga källor tillåter ska kartläggas, med källa och geografisk precision för varje händelse.</p><a href="https://www.krisinformation.se/nyheter/">Krisinformation: nyheter ↗</a></article>
-<article class="panel"><h2>Statistik</h2><p>Diagram över händelser per år, månad och typ utvecklas efter att datatäckningen verifierats. Uppdateringar av samma VMA ska inte dubbelräknas.</p></article>
-<article class="panel"><h2>Karta</h2><p>Planerad indelning: Luleå kommun, övriga Norrbotten och nationella händelser. Länsövergripande varningar ska inte räknas som enbart Luleåhändelser.</p></article>
+
+
 </section>
 
 
@@ -42,7 +42,7 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 </section>
 
 
-<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small><div class="sr-status-in-method" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid #dce2e7"><h3 id="pilot-title">SR VMA – teknisk insamlingsstatus</h3>
+<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><h3>Statistik och geografisk avgränsning</h3><p>Nationella diagram visar VMA-poster i Sverige efter händelsetyp och plats/anläggning. Historiktabellen visar ett separat, ofullständigt och källgranskat urval för Norrbottens kommuner. VMA-meddelanden ska skiljas från bakomliggande händelser: uppdateringar av ett och samma VMA ska inte dubbelräknas, medan separat utfärdade meddelanden kan avse samma händelse.</p><p>Geografisk redovisning skiljer mellan Luleå kommun, övriga Norrbotten och rikstäckande underlag. Länsövergripande varningar ska inte automatiskt räknas som enbart Luleåhändelser. En framtida karta kräver verifierad geografisk koppling; koordinater och geografisk utbredning ska inte antas från enbart ortnamn.</p><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 21 oktober 2026. Webbplatsen är en fristående sammanställning och inte en officiell myndighetskanal.</small><div class="sr-status-in-method" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid #dce2e7"><h3 id="pilot-title">SR VMA – teknisk insamlingsstatus</h3>
 <p id="pilot-status">Läser diagnostik…</p>
 <p class="data-note">Detta är en timvis teknisk kontroll, inte en direktsänd varningstjänst. Den sparar inga VMA-texter och ger inte ett historiskt händelseantal. Kontrollera alltid aktuella varningar hos <a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Krisinformation.se</a>.</p>
 </div></section>
