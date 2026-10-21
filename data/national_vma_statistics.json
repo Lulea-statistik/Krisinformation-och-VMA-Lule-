@@ -1,0 +1,31 @@
+{
+  "source": "Krisinformation.se VMA-statistik 2017–2026 (initial workbook transcription)",
+  "status": "historical_baseline_not_automatically_updated",
+  "coverage_note": "Preliminary national statistics from 365 classified records. Live SR VMA ingestion not enabled until archival and reuse permissions have been verified.",
+  "updated_at": "2026-10-21",
+  "total": 365,
+  "event_types": {
+    "Brand": 289,
+    "Farligt föremål/explosion": 26,
+    "Dricksvatten": 14,
+    "Övrigt": 14,
+    "Utsläpp": 11,
+    "Väder/naturhändelse": 6,
+    "Teknisk störning": 3,
+    "Okänd": 2
+  },
+  "fire_total": 289,
+  "fire_facility_types": {
+    "Industri": 94,
+    "Okänd": 65,
+    "Avfall/återvinning": 47,
+    "Bostad/boende": 30,
+    "Natur/skog": 15,
+    "Butik/handel": 10,
+    "Skola": 8,
+    "Fordon/transport": 7,
+    "Parkering/garage": 6,
+    "Restaurang": 4,
+    "Övrigt": 3
+  }
+}
