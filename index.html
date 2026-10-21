@@ -84,7 +84,7 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
       const val=document.createElement('strong');val.textContent=n+' ('+new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(share)+' %)';
       line.append(label,val);wrap.append(line);
       const track=document.createElement('div');track.style.height='12px';track.style.background='#e2e7eb';track.style.borderRadius='6px';track.style.overflow='hidden';
-      const bar=document.createElement('div');bar.style.height='100%';bar.style.width=share+'%';bar.style.background='#a61d32';track.append(bar);wrap.append(track);target.append(wrap);
+      const bar=document.createElement('div');bar.style.height='100%';bar.style.width=share+'%';bar.style.background=targetId==='fire-facility-bars'?'#64748B':'#a61d32';track.append(bar);wrap.append(track);target.append(wrap);
     }
    }
    const nationalTypes=[['Brand',289],['Farligt föremål/explosion',26],['Dricksvatten',14],['Övrigt',14],['Utsläpp',11],['Väder/naturhändelse',6],['Teknisk störning',3],['Okänd',2]];
