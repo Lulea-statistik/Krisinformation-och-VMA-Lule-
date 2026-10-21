@@ -47,7 +47,7 @@
   {
     "id": "krisinfo-2017-06-20-2584",
     "date": "2017-06-20",
-    "end_date": "2017-06-22",
+    "end_date": "2017-06-20",
     "title": "Brand vid avfallsanläggning i Kiruna",
     "type": "VMA",
     "municipality": "Kiruna",
@@ -59,7 +59,10 @@
     "url": "https://www.krisinformation.se/nyheter/2017/juni/viktigt-meddelande-till-allmanheten-i-kiruna/",
     "source_type": "historisk artikel",
     "verified": true,
-    "verification_note": "Originalartikel eller officiellt årsarkiv; datum avser artikelns publiceringsdatum, inte nödvändigtvis VMA:s starttid."
+    "verification_note": "MSB Analys av VMA 2017 ref 20 redovisar separat VMA information 20 juni. Återtaget före nytt VMA 21 juni. Exakt start- och sluttid ej fastställd.",
+    "incident_id": "kiruna-avfallsbrand-2017-06",
+    "vma_subtype": "information",
+    "verification_level": "official_msb_report"
   },
   {
     "id": "krisinfo-2018-08-01-2582",
@@ -436,5 +439,25 @@
     "verified": true,
     "verification_level": "official_article",
     "verification_note": "Publicerat 28 maj 2024 14.25; återtaget 20.20 enligt Krisinformation.se. Tider gäller publicering/återtagande."
+  },
+  {
+    "id": "krisinfo-2017-06-21-2584",
+    "date": "2017-06-21",
+    "end_date": "2017-06-22",
+    "title": "Nytt VMA om fortsatt brand och skadlig rök i Kiruna",
+    "type": "VMA",
+    "vma_subtype": "information",
+    "incident_id": "kiruna-avfallsbrand-2017-06",
+    "municipality": "Kiruna",
+    "municipality_code": "2584",
+    "location": "Avfallsanläggningen, Kiruna",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "MSB och Krisinformation.se",
+    "url": "https://rib.msb.se/Filer/pdf/28495.pdf",
+    "source_type": "officiell VMA-utvärdering",
+    "verified": true,
+    "verification_level": "official_msb_report",
+    "verification_note": "MSB Analys av VMA 2017 ref 21 dokumenterar nytt VMA information 21 juni efter att meddelandet från 20 juni återtagits. Krisinformation.se anger att faran var över 22 juni. Samma bakomliggande brand som föregående dygn."
   }
 ]
