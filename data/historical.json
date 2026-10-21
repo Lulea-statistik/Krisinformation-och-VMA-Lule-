@@ -400,5 +400,41 @@
     "verified": true,
     "verification_level": "contemporary_media_two_sources",
     "verification_note": "SVT publicerad 25 nov 2022 bekräftar VMA och återtagande kl 22.32 samma dag. Sveriges Radio (https://www.sverigesradio.se/artikel/fullt-utvecklad-brand-i-gallivare-alla-i-omradet-uppmanas-att-ga-inomhus) bekräftar samma händelse. Starttid ej exakt verifierad."
+  },
+  {
+    "id": "krisinfo-2021-03-31-morjarv",
+    "date": "2021-03-31",
+    "end_date": "2021-03-31",
+    "title": "VMA vid industribrand i Morjärv",
+    "type": "VMA",
+    "municipality": "Kalix",
+    "municipality_code": "2514",
+    "location": "Centrala Morjärv",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/20212/mars/viktigt-meddelande-till-allmanheten-i-morjarv/",
+    "source_type": "officiellt månadsarkiv",
+    "verified": true,
+    "verification_level": "archive_confirmed",
+    "verification_note": "Officiellt månadsarkiv 31 mars 2021: publicerat 06.07, återtaget 13.19. Artikellänk returnerar 410; kommun Kalix baserad på Morjärvs ortstillhörighet. Tider gäller publicering/återtagande, ej nödvändigtvis faktisk VMA-start."
+  },
+  {
+    "id": "krisinfo-2024-05-28-arvidsjaur",
+    "date": "2024-05-28",
+    "end_date": "2024-05-28",
+    "title": "VMA vid butiksbrand i centrala Arvidsjaur",
+    "type": "VMA",
+    "municipality": "Arvidsjaur",
+    "municipality_code": "2505",
+    "location": "Centrala Arvidsjaur",
+    "category": "Brand och rök",
+    "status": "Avslutad",
+    "source": "Krisinformation.se",
+    "url": "https://www.krisinformation.se/nyheter/20242/maj/vma-arvidsjaur",
+    "source_type": "historisk artikel",
+    "verified": true,
+    "verification_level": "official_article",
+    "verification_note": "Publicerat 28 maj 2024 14.25; återtaget 20.20 enligt Krisinformation.se. Tider gäller publicering/återtagande."
   }
 ]
