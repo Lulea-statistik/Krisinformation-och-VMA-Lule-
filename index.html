@@ -21,6 +21,16 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 <article class="panel"><h2>Karta</h2><p>Planerad indelning: Luleå kommun, övriga Norrbotten och nationella händelser. Länsövergripande varningar ska inte räknas som enbart Luleåhändelser.</p></article>
 </section>
 <section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small></section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="stats-title">
+<h2 id="stats-title">VMA-statistik – meddelanden och händelser</h2>
+<p>Statistiken avser enbart källgranskade historiska poster och är inte en fullständig förteckning. Välj kommun under historiken för att även filtrera denna sammanställning.</p>
+<div class="grid" aria-live="polite">
+<div class="panel"><h2>Antal VMA-meddelanden</h2><strong id="stat-messages">–</strong><p class="data-note">Separata utfärdade VMA räknas var för sig.</p></div>
+<div class="panel"><h2>Antal bakomliggande händelser</h2><strong id="stat-incidents">–</strong><p class="data-note">Poster med samma verifierade händelse-ID räknas en gång. Övriga registreringar räknas tills vidare var för sig.</p></div>
+</div>
+<div class="table-scroll"><table><thead><tr><th>År</th><th>VMA-meddelanden</th><th>Bakomliggande händelser</th></tr></thead><tbody id="stats-years"><tr><td colspan="3">Läser statistik…</td></tr></tbody></table></div>
+<p class="data-note">Årsvisa händelseantal hänförs till året för första registrerade VMA i varje händelsegrupp. Händelse-ID används bara där gemensam bakomliggande händelse har belagts. Skillnaden är bland annat Kiruna 20 och 21 juni 2017: två VMA, en brand. Saknade registreringar betyder inte att VMA saknades.</p>
+</section>
 <section class="panel" style="margin-top:1rem" aria-labelledby="history-title">
 <h2 id="history-title">Historiska VMA – Norrbotten</h2>
 <p>Urval av registrerade historiska poster, inte en fullständig tidsserie. Luleå visas som standard. Övriga kommuner får innehåll när källgranskade poster har lagts till.</p>
@@ -50,6 +60,15 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
    const name=municipalities[select.value];
    const records=all.filter(e=>e.verified===true && (e.municipality_code===select.value || (e.municipality===name && !e.municipality_code))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
    count.textContent=records.length+' registrerade poster (ofullständigt urval)';
+   const incidentId=e=>String(e.incident_id||e.id);
+   document.getElementById('stat-messages').textContent=String(records.length);
+   document.getElementById('stat-incidents').textContent=String(new Set(records.map(incidentId)).size);
+   const yearly=new Map();
+   for(const e of records){const year=String(e.date||'').slice(0,4);if(!/^\\d{4}$/.test(year))continue;if(!yearly.has(year))yearly.set(year,{messages:0,incidents:new Set()});yearly.get(year).messages++;yearly.get(year).incidents.add(incidentId(e));}
+   const yearsBody=document.getElementById('stats-years');yearsBody.replaceChildren();
+   for(const [year,stat] of [...yearly.entries()].sort((a,b)=>b[0].localeCompare(a[0]))){const tr=document.createElement('tr');td(tr,year);td(tr,stat.messages);td(tr,stat.incidents.size);yearsBody.append(tr);}
+   if(!yearly.size){const tr=document.createElement('tr');const cell=td(tr,'Inga registrerade händelser för kommunen.');cell.colSpan=3;yearsBody.append(tr);}
+
    if(!records.length){const tr=document.createElement('tr');const cell=td(tr,'Inga granskade poster registrerade för '+name+'. Detta innebär inte att VMA saknats.');cell.colSpan=5;body.append(tr);return;}
    for(const e of records){const tr=document.createElement('tr');td(tr,e.date);td(tr,e.title);td(tr,e.location);td(tr,e.status);
     const cell=document.createElement('td');
