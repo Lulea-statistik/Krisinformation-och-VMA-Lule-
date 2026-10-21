@@ -40,22 +40,12 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
 <div class="table-scroll"><table><thead><tr><th>Datum</th><th>Händelse</th><th>Område</th><th>Status</th><th>Källa</th></tr></thead><tbody id="history"><tr><td colspan="5">Läser in historiska poster…</td></tr></tbody></table></div>
 <p class="data-note">Källposter redovisas separat från SR:s tekniska pilot. Ingen tabellpost innebär inte att kommunen saknade VMA.</p>
 </section>
-<section class="panel" style="margin-top:1rem" aria-labelledby="pilot-title">
-<h2 id="pilot-title">SR VMA – teknisk insamlingsstatus</h2>
+
+
+<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small><div class="sr-status-in-method" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid #dce2e7"><h3 id="pilot-title">SR VMA – teknisk insamlingsstatus</h3>
 <p id="pilot-status">Läser diagnostik…</p>
 <p class="data-note">Detta är en timvis teknisk kontroll, inte en direktsänd varningstjänst. Den sparar inga VMA-texter och ger inte ett historiskt händelseantal. Kontrollera alltid aktuella varningar hos <a href="https://www.krisinformation.se/aktuellt/viktigt-meddelande-till-allmanheten-vma/">Krisinformation.se</a>.</p>
-</section>
-<section class="panel" style="margin-top:1rem" aria-labelledby="stats-title">
-<h2 id="stats-title">VMA-statistik – meddelanden och händelser</h2>
-<p>Statistiken avser enbart källgranskade historiska poster och är inte en fullständig förteckning. Välj kommun under historiken för att även filtrera denna sammanställning.</p>
-<div class="grid" aria-live="polite">
-<div class="panel"><h2>Antal VMA-meddelanden</h2><strong id="stat-messages">–</strong><p class="data-note">Separata utfärdade VMA räknas var för sig.</p></div>
-<div class="panel"><h2>Antal bakomliggande händelser</h2><strong id="stat-incidents">–</strong><p class="data-note">Poster med samma verifierade händelse-ID räknas en gång. Övriga registreringar räknas tills vidare var för sig.</p></div>
-</div>
-<div class="table-scroll"><table><thead><tr><th>År</th><th>VMA-meddelanden</th><th>Bakomliggande händelser</th></tr></thead><tbody id="stats-years"><tr><td colspan="3">Läser statistik…</td></tr></tbody></table></div>
-<p class="data-note">Årsvisa händelseantal hänförs till året för första registrerade VMA i varje händelsegrupp. Händelse-ID används bara där gemensam bakomliggande händelse har belagts. Skillnaden är bland annat Kiruna 20 och 21 juni 2017: två VMA, en brand. Saknade registreringar betyder inte att VMA saknades.</p>
-</section>
-<section class="panel" style="margin-top:1rem"><h2>Metod &amp; data</h2><p>Två skilda datamängder planeras: <strong>formella VMA</strong> och <strong>övrig krisinformation</strong>. Geografisk klassificering, historisk täckning, publicerings- och avslutstid samt originalkälla behöver granskas innan statistik publiceras.</p><p>Källor att undersöka: <a href="https://api.krisinformation.se/v3">Krisinformation API</a> och <a href="https://vmaapi.sr.se/index.html">Sveriges Radios VMA API</a>.</p><small>Senast ändrad: 19 oktober 2026. Webbplatsen är en prototyp och inte en officiell myndighetskanal.</small></section>
+</div></section>
 <script>
 (async function(){
  const municipalities={"2505":"Arvidsjaur","2506":"Arjeplog","2510":"Jokkmokk","2513":"Överkalix","2514":"Kalix","2518":"Övertorneå","2521":"Pajala","2523":"Gällivare","2560":"Älvsbyn","2580":"Luleå","2581":"Piteå","2582":"Boden","2583":"Haparanda","2584":"Kiruna"};
@@ -92,15 +82,6 @@ select{font:inherit;border:1px solid #b9c4cd;border-radius:8px;padding:.6rem;min
    drawBars('event-type-bars',nationalTypes,365);
    drawBars('fire-facility-bars',nationalFires,289);
    document.getElementById('fire-denominator').textContent='Riket: 289 brandklassade poster av 365 inlästa VMA-poster (79,2 %). Källa: Krisinformations Excelstatistik 2017–2026. Preliminär kategorisering.';
-   const incidentId=e=>String(e.incident_id||e.id);
-   document.getElementById('stat-messages').textContent=String(records.length);
-   document.getElementById('stat-incidents').textContent=String(new Set(records.map(incidentId)).size);
-   const yearly=new Map();
-   for(const e of records){const year=String(e.date||'').slice(0,4);if(!/^[0-9]{4}$/.test(year))continue;if(!yearly.has(year))yearly.set(year,{messages:0,incidents:new Set()});yearly.get(year).messages++;yearly.get(year).incidents.add(incidentId(e));}
-   const yearsBody=document.getElementById('stats-years');yearsBody.replaceChildren();
-   for(const [year,stat] of [...yearly.entries()].sort((a,b)=>b[0].localeCompare(a[0]))){const tr=document.createElement('tr');td(tr,year);td(tr,stat.messages);td(tr,stat.incidents.size);yearsBody.append(tr);}
-   if(!yearly.size){const tr=document.createElement('tr');const cell=td(tr,'Inga registrerade händelser för kommunen.');cell.colSpan=3;yearsBody.append(tr);}
-
    if(!records.length){const tr=document.createElement('tr');const cell=td(tr,'Inga granskade poster registrerade för '+name+'. Detta innebär inte att VMA saknats.');cell.colSpan=5;body.append(tr);return;}
    for(const e of records){const tr=document.createElement('tr');td(tr,e.date);td(tr,e.title);td(tr,e.location);td(tr,e.status);
     const cell=document.createElement('td');
