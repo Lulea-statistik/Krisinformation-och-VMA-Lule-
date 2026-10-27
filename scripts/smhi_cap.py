@@ -1,208 +1,160 @@
 #!/usr/bin/env python3
-"""Collect current SMHI CAP warnings without inventing geographic precision.
+"""Fetch current SMHI impact-based warnings with geometry from the official JSON API.
 
-Source: https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap.xml
-CAP 1.2 polygons use WGS84 (EPSG:4326) lat,lon; GeoJSON uses lon,lat.
-A failed collection must never overwrite the last successful snapshot.
+CAP remains an alternative format, but the CAP RSS feed is too large for efficient
+half-hourly collection. The JSON warning endpoint is explicitly documented by SMHI
+for the current warnings and includes EPSG:4326 GeoJSON polygons.
+A failed download/parse never replaces the previous public snapshot.
 """
 import json
 import os
-import re
-import sys
-import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-FEED = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap.xml"
-CAP_PREFIX = "/ibww/api/version/1/"
-HOST = "opendata-download-warnings.smhi.se"
+SOURCE = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json"
+OFFICIAL = "https://www.smhi.se/vader/varningar-och-meddelanden"
 OUTPUT = Path("data/smhi_cap_warnings.json")
-NS = {"cap": "urn:oasis:names:tc:emergency:cap:1.2"}
+MAX_BYTES = 24 * 1024 * 1024
 
 
-def utc_now():
-    return datetime.now(timezone.utc)
-
-
-def fetch_xml(url):
-    parsed = urlparse(url)
-    if parsed.scheme != "https" or parsed.hostname != HOST:
-        raise ValueError("CAP URL is not from the authorized SMHI host")
-    if url != FEED and not parsed.path.startswith(CAP_PREFIX):
-        raise ValueError("Unrecognized SMHI CAP URL")
-    request = Request(url, headers={
-        "User-Agent": "Lulea-statistik-SMHI-CAP/1.0 (public-information-project)",
-        "Accept": "application/xml, text/xml, application/rss+xml"
+def fetch_warnings():
+    request = Request(SOURCE, headers={
+        "User-Agent": "Lulea-statistik-SMHI-warnings/2.0 (public-information-project)",
+        "Accept": "application/json"
     })
-    # RSS can exceed 3 MB when numerous alerts and their metadata are present.
-    # Keep distinct, generous upper bounds to avoid memory exhaustion.
-    limit = 64 * 1024 * 1024 if url == FEED else 16 * 1024 * 1024
-    with urlopen(request, timeout=35) as response:
+    with urlopen(request, timeout=40) as response:
         declared = response.headers.get("Content-Length")
-        if declared and int(declared) > limit:
-            raise ValueError(f"SMHI CAP document too large: {declared} bytes (limit {limit})")
-        payload = response.read(limit + 1)
-    if len(payload) > limit:
-        raise ValueError(f"SMHI CAP document too large: >{limit} bytes")
-    print(f"Fetched SMHI CAP XML: {len(payload)} bytes from {url}", flush=True)
-    return ET.fromstring(payload)
+        if declared and int(declared) > MAX_BYTES:
+            raise ValueError("SMHI warning JSON exceeds safety size limit")
+        payload = response.read(MAX_BYTES + 1)
+    if len(payload) > MAX_BYTES:
+        raise ValueError("SMHI warning JSON exceeds safety size limit")
+    print(f"Fetched SMHI warning JSON: {len(payload)} bytes", flush=True)
+    return json.loads(payload)
 
 
-def txt(node, path):
-    value = node.findtext(path, default="", namespaces=NS)
-    return (value or "").strip()
-
-
-def parse_time(value):
-    if not value:
+def parse_time(s):
+    if not s:
         return None
     try:
-        return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
-    except ValueError:
+        return datetime.fromisoformat(s.replace("Z", "+00:00")).astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        raise ValueError(f"Unexpected SMHI warning timestamp: {s!r}")
+
+
+def localized(value):
+    if isinstance(value, dict):
+        return str(value.get("sv") or value.get("en") or "")
+    return str(value or "")
+
+
+def verified_geometry(feature):
+    if not isinstance(feature, dict):
         return None
-
-
-def cap_polygons(area):
-    """Convert CAP WGS84 latitude,longitude pairs to RFC 7946 lon,lat."""
-    rings = []
-    for node in area.findall("cap:polygon", NS):
-        ring = []
-        for pair in (node.text or "").split():
-            parts = pair.split(",")
-            if len(parts) != 2:
-                ring = []
-                break
-            try:
-                lat, lon = float(parts[0]), float(parts[1])
-            except ValueError:
-                ring = []
-                break
-            if not (-90 <= lat <= 90 and -180 <= lon <= 180):
-                ring = []
-                break
-            ring.append([lon, lat])
-        if len(ring) >= 3:
-            if ring[0] != ring[-1]:
-                ring.append(ring[0])
-            if len(ring) >= 4:
-                rings.append(ring)
-    if not rings:
+    geometry = feature.get("geometry")
+    if not isinstance(geometry, dict) or geometry.get("type") not in ("Polygon", "MultiPolygon"):
         return None
-    if len(rings) == 1:
-        return {"type": "Polygon", "coordinates": [rings[0]]}
-    return {"type": "MultiPolygon", "coordinates": [[ring] for ring in rings]}
+    crs = ((feature.get("crs") or {}).get("properties") or {}).get("name")
+    if crs is not None and crs.upper() not in ("EPSG:4326", "URN:OGC:DEF:CRS:OGC:1.3:CRS84"):
+        raise ValueError(f"Unsupported source CRS: {crs!r}")
+    # The SMHI JSON API represents these areas in WGS84 GeoJSON lon/lat order.
+    # Reject clearly invalid coordinates rather than reprojecting based on guessed CRS.
+    def verify(coords, depth=0):
+        if depth > 10:
+            raise ValueError("Unexpected nested geometry")
+        if isinstance(coords, list) and len(coords) >= 2 and all(
+            isinstance(x, (int, float)) and not isinstance(x, bool) for x in coords[:2]
+        ):
+            lon, lat = coords[:2]
+            if not (-180 <= lon <= 180 and -90 <= lat <= 90):
+                raise ValueError("Invalid longitude/latitude in SMHI polygon")
+            return 1
+        if not isinstance(coords, list):
+            raise ValueError("Invalid SMHI polygon coordinates")
+        return sum(verify(child, depth + 1) for child in coords)
+    n = verify(geometry.get("coordinates"))
+    if n < 4:
+        raise ValueError("SMHI polygon contains too few positions")
+    return geometry
 
 
-def parse_cap(root, url):
-    if root.tag != "{urn:oasis:names:tc:emergency:cap:1.2}alert":
-        raise ValueError("Expected CAP 1.2 alert")
-    message_type = txt(root, "cap:msgType")
-    status = txt(root, "cap:status")
-    identifier = txt(root, "cap:identifier")
-    if not identifier:
-        raise ValueError("Missing CAP identifier")
-    references = re.findall(r"\S+?,([^,\s]+),\S+", txt(root, "cap:references"))
-    sent = txt(root, "cap:sent")
+def descriptions(fields, code):
+    return "\n\n".join(
+        localized(d.get("text")) for d in fields
+        if isinstance(d, dict) and (d.get("title") or {}).get("code") == code
+        and localized(d.get("text"))
+    )
+
+
+def normalize(payload, now=None):
+    if not isinstance(payload, list):
+        raise ValueError("SMHI warning.json must be a JSON array")
+    now = now or datetime.now(timezone.utc)
     entries = []
-    if status.lower() == "actual" and message_type.lower() in ("alert", "update"):
-        infos = root.findall("cap:info", NS)
-        swedish = [n for n in infos if txt(n, "cap:language").lower().startswith("sv")]
-        chosen = swedish if swedish else infos[:1]
-        for info_idx, info in enumerate(chosen):
-            severity = txt(info, "cap:severity")
-            for area_idx, area in enumerate(info.findall("cap:area", NS)):
-                entries.append({
-                    "id": identifier + ":" + str(info_idx) + ":" + str(area_idx),
-                    "identifier": identifier,
-                    "cap_url": url,
-                    "sent": sent,
-                    "event": txt(info, "cap:event"),
-                    "headline": txt(info, "cap:headline"),
-                    "description": txt(info, "cap:description"),
-                    "instruction": txt(info, "cap:instruction"),
-                    "severity": severity,
-                    "urgency": txt(info, "cap:urgency"),
-                    "certainty": txt(info, "cap:certainty"),
-                    "effective": txt(info, "cap:effective"),
-                    "onset": txt(info, "cap:onset"),
-                    "expires": txt(info, "cap:expires"),
-                    "area_name": txt(area, "cap:areaDesc"),
-                    "geometry": cap_polygons(area),
-                })
-    return {"identifier": identifier, "references": references, "type": message_type, "status": status, "entries": entries}
-
-
-def collect(feed, previous, downloader=fetch_xml, now=None):
-    now = now or utc_now()
-    if feed.tag == "{urn:oasis:names:tc:emergency:cap:1.2}alert":
-        raise ValueError("CAP endpoint returned a single alert rather than a feed")
-    channel = feed.find("channel") if feed.tag == "rss" else None
-    urls = []
-    seen = set()
-    items = channel.findall("item") if channel is not None else feed.findall("{http://www.w3.org/2005/Atom}entry")
-    if channel is None and not items:
-        raise ValueError("Unknown SMHI CAP feed format")
-    for item in items:
-        link = (item.findtext("link") or "").strip()
-        if not link:
-            atom_link = item.find("{http://www.w3.org/2005/Atom}link")
-            link = atom_link.get("href", "") if atom_link is not None else ""
-        if not link or link in seen:
-            continue
-        parsed = urlparse(link)
-        if parsed.scheme != "https" or parsed.hostname != HOST or not parsed.path.startswith(CAP_PREFIX):
-            raise ValueError("Unexpected CAP URL in feed")
-        seen.add(link)
-        urls.append(link)
-    # If a CAP item cannot be loaded, do not publish a potentially incomplete snapshot.
-    if len(urls) > 250:
-        raise ValueError("Unexpected number of CAP links")
-    messages = {}
-    for url in urls:
-        messages[url] = parse_cap(downloader(url), url)
-    # CAP Update and Cancel references invalidate preceding messages.
-    invalidated = {
-        ref
-        for message in messages.values()
-        for ref in message.get("references", [])
-    }
-    entries = []
-    for message in messages.values():
-        if message.get("identifier") in invalidated:
-            continue
-        for entry in message.get("entries", []):
-            expiry = parse_time(entry.get("expires"))
+    for warning in payload:
+        if not isinstance(warning, dict) or "id" not in warning:
+            raise ValueError("Invalid SMHI warning record")
+        event = localized(warning.get("event"))
+        areas = warning.get("warningAreas")
+        if not isinstance(areas, list):
+            raise ValueError("Missing warningAreas in SMHI response")
+        for area in areas:
+            if not isinstance(area, dict) or "id" not in area:
+                raise ValueError("Invalid SMHI warning area")
+            expiry = parse_time(area.get("approximateEnd"))
             if expiry is not None and expiry <= now:
                 continue
+            info = area.get("descriptions") or []
+            if not isinstance(info, list):
+                raise ValueError("Unexpected SMHI description data")
+            level = area.get("warningLevel") or {}
+            name = localized(area.get("areaName"))
+            feature = area.get("area")
+            entry = {
+                "id": str(warning["id"]) + ":" + str(area["id"]),
+                "identifier": str(warning["id"]),
+                "cap_url": OFFICIAL,
+                "sent": area.get("published") or "",
+                "event": event,
+                "headline": localized(area.get("eventDescription")) or event,
+                "description": descriptions(info, "INCIDENT") or "\n\n".join(
+                    localized(d.get("text")) for d in info
+                    if isinstance(d, dict) and localized(d.get("text"))
+                ),
+                "instruction": descriptions(info, "AFFECT"),
+                "severity": (level.get("code") or "").upper(),
+                "severity_label": localized(level),
+                "urgency": "",
+                "certainty": "",
+                "effective": area.get("approximateStart") or "",
+                "onset": area.get("approximateStart") or "",
+                "expires": area.get("approximateEnd") or "",
+                "area_name": name,
+                "geometry": verified_geometry(feature),
+                "crs": "EPSG:4326",
+                "source_crs_declared": bool(isinstance(feature, dict) and feature.get("crs")),
+            }
             entries.append(entry)
-    entries.sort(key=lambda e: (e.get("onset") or "", e.get("id") or ""))
+    entries.sort(key=lambda e: (e["onset"], e["id"]))
     return {
         "status": "ok",
         "checked_at_utc": now.isoformat().replace("+00:00", "Z"),
-        "source": FEED,
+        "source": SOURCE,
+        "method": "SMHI current warnings JSON (not CAP RSS)",
         "crs": "EPSG:4326",
         "area_count": len(entries),
-        "warnings": entries,
-        "messages": messages,
+        "warnings": entries
     }
 
 
 def main():
-    old = {}
-    if OUTPUT.exists():
-        try:
-            old = json.loads(OUTPUT.read_text(encoding="utf-8"))
-        except (ValueError, OSError):
-            pass
-    result = collect(fetch_xml(FEED), old)
+    result = normalize(fetch_warnings())
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    # Keep CAP cache small by retaining only messages referenced by the current RSS feed.
-    temp = OUTPUT.with_suffix(".tmp")
-    temp.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    os.replace(temp, OUTPUT)
-    print("SMHI CAP snapshot:", result["area_count"], "warning areas; timestamp:", result["checked_at_utc"])
+    tmp = OUTPUT.with_suffix(".tmp")
+    tmp.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    os.replace(tmp, OUTPUT)
+    print(f"SMHI current warnings: {len(result['warnings'])} areas at {result['checked_at_utc']}", flush=True)
 
 
 if __name__ == "__main__":
