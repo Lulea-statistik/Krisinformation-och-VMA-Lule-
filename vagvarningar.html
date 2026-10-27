@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vägvarningar – Krisinformation och VMA Luleå</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxT4Q5i9r1aVZ9F9c9bJwYp5c=" crossorigin="">
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#19212b;background:#f5f7f9}*{box-sizing:border-box}body{margin:0}header{background:#a61d32;color:white;padding:1.5rem max(1rem,calc((100vw - 1100px)/2))}header a{color:white}main,footer{max-width:1100px;margin:auto;padding:1.5rem 1rem}a{color:#9d2036}.panel{background:white;border:1px solid #dce2e7;border-radius:12px;padding:1.2rem;margin-bottom:1rem}.controls{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin:.7rem 0}select{padding:.55rem;border:1px solid #b9c4cd;border-radius:7px;max-width:100%}#map{height:480px;width:100%;background:#e8eff3;border-radius:8px}.muted,small{color:#576274}.warn{border-left:4px solid #b7791f;padding:.8rem;background:#fff7e3}.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.7rem;border-bottom:1px solid #e2e7eb;text-align:left;vertical-align:top}th{background:#f3f5f7}footer{font-size:.9rem}.tag{display:inline-block;border-radius:5px;background:#eee;padding:.1rem .4rem}details{margin-top:.4rem}h1{margin:.4rem 0}.leaflet-container{font:inherit}
+</style></head><body>
+<header><p><a href="./">← Krisinformation och VMA – Luleå</a></p><h1>Vägvarningar</h1><p>SMHI:s vädervarningar som kan påverka vägar och transporter – nationella varningsområden, inte verifierade vägavstängningar.</p></header>
+<main>
+<div class="warn"><strong>Inte en officiell varningskanal.</strong> SMHI:s varningspolygoner identifierar väderområden, inte specifika vägsträckor. Kontrollera <a href="https://www.smhi.se/vader/varningar-och-meddelanden">SMHI:s aktuella varningar</a> och <a href="https://www.trafikverket.se/trafikinformation/">Trafikverkets trafikinformation</a> före resa.</div>
+<section class="panel"><div class="controls">
+<label>Geografiskt utsnitt <select id="region"><option value="se">Sverige</option><option value="nb">Norrbotten (kartutsnitt)</option><option value="lu">Luleå (kartutsnitt)</option></select></label>
+<label>Varningstyp <select id="type"><option value="all">Alla vädervarningar</option></select></label>
+<label>Allvarlighetsgrad <select id="severity"><option value="all">Alla nivåer</option></select></label>
+</div><p id="status" class="muted" aria-live="polite">Läser senaste datainsamlingen…</p><div id="map" role="region" aria-label="Karta över SMHI:s varningsområden"></div><p class="muted">Geografiska filter ändrar endast kartans utsnitt. Varningstabellen avser hela Sverige. Detta undviker falska kommunträffar utan verifierad kommunpolygon.</p></section>
+<section class="panel"><h2>Aktuella eller nyligen publicerade varningsområden</h2><p id="count" class="muted"></p><div class="tablewrap"><table><thead><tr><th>Varningstyp</th><th>Område</th><th>Allvarlighet</th><th>Giltig från</th><th>Giltig till</th><th>Beskrivning och källa</th></tr></thead><tbody id="rows"><tr><td colspan="6">Läser data…</td></tr></tbody></table></div></section>
+<section class="panel"><h2>Metod &amp; data</h2><p>Källa: <a href="https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap.xml">SMHI:s CAP-flöde</a>. Insamling sker via GitHub Actions. CAP-koordinater är WGS84 (EPSG:4326) och omvandlas från CAP:s latitud,longitud till GeoJSON:s longitud,latitud. Varningsområden visas som polygoner; områden utan geometri kan endast visas i tabellen. Uppdateringar och återkallelser behandlas separat.</p><p>Data kan vara fördröjda. Om senast lyckade hämtning är äldre än två timmar visas den inte som aktuell. Ingen varning i tabellen innebär inte säkert att ingen varning finns. All originaltext och varningsnivå härrör från SMHI. Beskrivningar får inte tolkas som kommun- eller vägsträckspecifika observationer.</p><p>Detta är en fristående bearbetning och inte en tjänst från SMHI. Källa: Sveriges meteorologiska och hydrologiska institut (SMHI).</p></section></main><footer>Kontrollera alltid de officiella källorna.</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(async()=>{
+const $=s=>document.querySelector(s);let warnings=[];
+const bounds={se:[[55.0,10.0],[69.5,24.8]],nb:[[65.1,16.0],[69.3,24.5]],lu:[[65.35,21.4],[66.35,23.1]]};
+let map=null,layer=null;
+try{if(window.L){map=L.map('map').fitBounds(bounds.se);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);layer=L.featureGroup().addTo(map);}
+else{$('#map').textContent='Kartbiblioteket kunde inte läsas. Tabellvisning fungerar ändå.';}}catch(e){$('#map').textContent='Kartan kunde inte startas.';}
+function dt(s){if(!s)return '–';const d=new Date(s);return Number.isNaN(d.getTime())?s:new Intl.DateTimeFormat('sv-SE',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Stockholm'}).format(d);}
+const safe=(value)=>String(value||'–');
+const cell=(tr,value)=>{const td=document.createElement('td');td.textContent=safe(value);tr.append(td);return td;};
+function render(){
+ const type=$('#type').value,severity=$('#severity').value;
+ const filtered=warnings.filter(w=>(type==='all'||w.event===type)&&(severity==='all'||w.severity===severity));
+ $('#rows').replaceChildren();if(layer)layer.clearLayers();let n=0;
+ for(const w of filtered){
+ const tr=document.createElement('tr');cell(tr,w.headline||w.event);cell(tr,w.area_name);cell(tr,w.severity);cell(tr,dt(w.onset||w.effective));cell(tr,dt(w.expires));
+ const td=document.createElement('td');const detail=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Visa varningstext';detail.append(summary);const p=document.createElement('p');p.textContent=safe(w.description);detail.append(p);if(w.instruction){const i=document.createElement('p');i.textContent=w.instruction;detail.append(i);}td.append(detail);
+ if(w.cap_url){const a=document.createElement('a');a.href=w.cap_url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='SMHI CAP (original)';td.append(a);}tr.append(td);$('#rows').append(tr);
+ if(map&&w.geometry){try{
+ const color={Extreme:'#9b1c31',Severe:'#dc6f20',Moderate:'#e8af27',Minor:'#538cbb'}[w.severity]||'#64748b';
+ const g=L.geoJSON({type:'Feature',geometry:w.geometry,properties:{}},{style:{color,weight:2,fillOpacity:.22}});
+ const info=document.createElement('div');const b=document.createElement('strong');b.textContent=w.headline||w.event;info.append(b);const a=document.createElement('p');a.textContent=w.area_name||'';info.append(a);g.bindPopup(info);g.addTo(layer);n++;
+ }catch(err){console.warn('Invalid SMHI geometry',err);}}
+ }
+ if(!filtered.length){const tr=document.createElement('tr');const td=cell(tr,'Inga varningsområden i det valda filtret. Kontrollera officiell källa.');td.colSpan=6;}
+ $('#count').textContent=filtered.length+' varningsområden i hela Sverige, varav '+n+' med kartgeometri. Flera områden kan höra till samma varning.';
+ if(map){map.fitBounds(bounds[$('#region').value]);}
+}
+$('#region').addEventListener('change',()=>{if(map)map.fitBounds(bounds[$('#region').value]);});
+$('#type').addEventListener('change',render);$('#severity').addEventListener('change',render);
+try{
+ const r=await fetch('./data/smhi_cap_warnings.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
+ const d=await r.json();if(!Array.isArray(d.warnings)||!d.checked_at_utc||d.status!=='ok')throw Error('Ofullständig insamling');
+ const stamp=new Date(d.checked_at_utc);if(Number.isNaN(stamp.getTime()))throw Error('Felaktig tidsstämpel');
+ const age=Date.now()-stamp.getTime();const fresh=age>=0&&age<2*60*60*1000;
+ $('#status').textContent=(fresh?'Senaste lyckade insamling: ':'VARNING: inaktuell datainsamling: ')+dt(d.checked_at_utc)+(fresh?' (svensk tid).':' (svensk tid). Kontrollera SMHI innan du använder uppgifterna.');
+ warnings=fresh?d.warnings:[]; // Never present stale alerts as current.
+ const events=[...new Set(warnings.map(w=>w.event).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'sv'));
+ for(const e of events){const o=document.createElement('option');o.value=e;o.textContent=e;$('#type').append(o);}
+ const severities=[...new Set(warnings.map(w=>w.severity).filter(Boolean))].sort();
+ for(const e of severities){const o=document.createElement('option');o.value=e;o.textContent=e;$('#severity').append(o);}
+ render();
+}catch(e){$('#status').textContent='SMHI-data kunde inte läsas eller verifieras. Kontrollera officiell källa. ('+e.message+')';warnings=[];render();}
+})();
+</script></body></html>
