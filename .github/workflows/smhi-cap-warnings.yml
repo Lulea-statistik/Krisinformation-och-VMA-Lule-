@@ -1,4 +1,4 @@
-name: Uppdatera SMHI CAP-vädervarningar
+name: Uppdatera SMHI-vädervarningar
 on:
   push:
     paths:
@@ -24,9 +24,9 @@ jobs:
           python-version: '3.12'
       - name: Kontrollera Python-kod
         run: python -m py_compile scripts/smhi_cap.py
-      - name: Kör tester för SMHI CAP
+      - name: Kör tester för SMHI:s varnings-JSON
         run: python -m unittest discover -s tests -p 'test_smhi_cap.py' -v
-      - name: Läs SMHI CAP
+      - name: Läs SMHI:s aktuella vädervarningar (JSON)
         run: python scripts/smhi_cap.py
       - name: Publicera lyckad insamling
         run: |
