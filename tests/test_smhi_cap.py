@@ -1,30 +1,61 @@
 #!/usr/bin/env python3
 import unittest
-from io import BytesIO
-from unittest.mock import patch
 from datetime import datetime, timezone
-from xml.etree import ElementTree as ET
-from scripts.smhi_cap import cap_polygons, parse_cap, collect, fetch_xml, FEED
+from scripts.smhi_cap import normalize, verified_geometry
 
-CAP = 'urn:oasis:names:tc:emergency:cap:1.2'
-def sample(t='Alert'):
- return ET.fromstring(f'''<alert xmlns="{CAP}"><identifier>test-a</identifier><status>Actual</status><msgType>{t}</msgType><sent>2026-10-27T08:00:00+00:00</sent><info><language>sv-SE</language><event>Snöfall</event><severity>Severe</severity><area><areaDesc>Testområde</areaDesc><polygon>65,22 65,23 66,23 65,22</polygon></area></info></alert>''')
-class TestCAP(unittest.TestCase):
- def test_rss_larger_than_three_megabytes(self):
-  large_rss = ('<rss><channel><item><description>' + ('x' * 3_100_000) + '</description></item></channel></rss>').encode('utf-8')
-  class DummyResponse(BytesIO):
-   def __init__(self, payload):
-    super().__init__(payload)
-    self.headers = {}
-  with patch('scripts.smhi_cap.urlopen', return_value=DummyResponse(large_rss)):
-   parsed = fetch_xml(FEED)
-  self.assertEqual(parsed.tag, 'rss')
- def test_coordinate_order(self):
-  a=sample().find('.//{%s}area'%CAP)
-  self.assertEqual(cap_polygons(a)['coordinates'][0][0],[22.0,65.0])
- def test_alert(self):
-  d=parse_cap(sample(),'https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap/test')
-  self.assertEqual(d['entries'][0]['event'],'Snöfall')
- def test_cancel(self):
-  self.assertEqual(parse_cap(sample('Cancel'),'https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap/test')['entries'],[])
-if __name__=='__main__':unittest.main()
+EXAMPLE = [{
+ "id": 123,
+ "event": {"sv": "Snöfall", "code": "SNOW"},
+ "warningAreas": [{
+  "id": 456,
+  "approximateStart": "2026-10-27T11:00:00Z",
+  "approximateEnd": "2026-10-28T12:00:00Z",
+  "published": "2026-10-27T08:00:00Z",
+  "areaName": {"sv": "Delar av Norrbotten"},
+  "eventDescription": {"sv": "Snöfall"},
+  "warningLevel": {"sv": "Gul", "code": "YELLOW"},
+  "descriptions": [
+   {"title": {"code": "INCIDENT"}, "text": {"sv": "Stora snömängder."}},
+   {"title": {"code": "AFFECT"}, "text": {"sv": "Var försiktig i trafiken."}}
+  ],
+  "area": {
+   "crs": {"type": "name", "properties": {"name": "EPSG:4326"}},
+   "type": "Feature",
+   "geometry": {"type": "Polygon", "coordinates": [[[22, 65], [23, 65], [23, 66], [22, 65]]]}
+  }
+ }]
+}]
+
+NOW = datetime(2026, 10, 27, 9, 0, tzinfo=timezone.utc)
+
+class TestSmhiWarnings(unittest.TestCase):
+ def test_normalize_expected_geometry_and_level(self):
+  data = normalize(EXAMPLE, now=NOW)
+  item = data["warnings"][0]
+  self.assertEqual(item["id"], "123:456")
+  self.assertEqual(item["severity"], "YELLOW")
+  self.assertEqual(item["severity_label"], "Gul")
+  self.assertEqual(item["event"], "Snöfall")
+  self.assertEqual(item["geometry"]["coordinates"][0][0], [22, 65])
+  self.assertEqual(item["instruction"], "Var försiktig i trafiken.")
+  self.assertTrue(item["source_crs_declared"])
+
+ def test_empty_current_feed_valid(self):
+  self.assertEqual(normalize([], now=NOW)["area_count"], 0)
+
+ def test_expired_warning_removed(self):
+  now = datetime(2026, 10, 29, tzinfo=timezone.utc)
+  self.assertEqual(normalize(EXAMPLE, now=now)["warnings"], [])
+
+ def test_bad_format_rejected(self):
+  with self.assertRaises(ValueError):
+   normalize({"bad": "object"}, now=NOW)
+
+ def test_wrong_crs_rejected(self):
+  bad = {"type": "Feature", "crs": {"properties": {"name": "EPSG:3006"}},
+         "geometry": EXAMPLE[0]["warningAreas"][0]["area"]["geometry"]}
+  with self.assertRaises(ValueError):
+   verified_geometry(bad)
+
+if __name__ == "__main__":
+ unittest.main()
