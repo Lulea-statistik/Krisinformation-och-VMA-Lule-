@@ -1,0 +1,33 @@
+name: Uppdatera SMHI CAP-vädervarningar
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '11,41 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: smhi-cap-warnings
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kontrollera Python-kod
+        run: python -m py_compile scripts/smhi_cap.py
+      - name: Läs SMHI CAP
+        run: python scripts/smhi_cap.py
+      - name: Publicera lyckad insamling
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/smhi_cap_warnings.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update SMHI CAP warning snapshot"
+            git pull --rebase
+            git push
+          fi
