@@ -5,9 +5,25 @@
 <style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#19212b;background:#f5f7f9}*{box-sizing:border-box}body{margin:0}header{background:#a61d32;color:white;padding:1.5rem max(1rem,calc((100vw - 1100px)/2))}header a{color:white}main,footer{max-width:1100px;margin:auto;padding:1.5rem 1rem}a{color:#9d2036}.panel{background:white;border:1px solid #dce2e7;border-radius:12px;padding:1.2rem;margin-bottom:1rem}.controls{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin:.7rem 0}select{padding:.55rem;border:1px solid #b9c4cd;border-radius:7px;max-width:100%}#map{height:480px;width:100%;background:#e8eff3;border-radius:8px}.muted,small{color:#576274}.warn{border-left:4px solid #b7791f;padding:.8rem;background:#fff7e3}.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.7rem;border-bottom:1px solid #e2e7eb;text-align:left;vertical-align:top}th{background:#f3f5f7}footer{font-size:.9rem}.tag{display:inline-block;border-radius:5px;background:#eee;padding:.1rem .4rem}details{margin-top:.4rem}h1{margin:.4rem 0}.leaflet-container{font:inherit}
 </style></head><body>
-<header><p><a href="./">← Krisinformation och VMA – Luleå</a></p><h1>Vägvarningar</h1><p>SMHI:s vädervarningar som kan påverka vägar och transporter – nationella varningsområden, inte verifierade vägavstängningar.</p></header>
+<header><p><a href="./">← Krisinformation och VMA – Luleå</a></p><h1>Vägvarningar och trafikinformation</h1><p>Två separata datakällor: Trafikverkets vägtrafikhändelser och SMHI:s vädervarningar.</p></header>
 <main>
-<div class="warn"><strong>Inte en officiell varningskanal.</strong> SMHI:s varningspolygoner identifierar väderområden, inte specifika vägsträckor. Kontrollera <a href="https://www.smhi.se/vader/varningar-och-meddelanden">SMHI:s aktuella varningar</a> och <a href="https://www.trafikverket.se/trafikinformation/">Trafikverkets trafikinformation</a> före resa.</div>
+<section class="panel" aria-labelledby="traffic-title">
+<h2 id="traffic-title">Vägtrafikinformation – Trafikverket</h2>
+<p>Olyckor, vägarbeten, avstängningar, hinder och andra meddelanden om framkomlighet. Trafikverket är källan; dessa är <strong>inte</strong> SMHI:s vädervarningar.</p>
+<div class="controls">
+<label for="traffic-region">Kartutsnitt <select id="traffic-region"><option value="nb">Norrbottens län</option><option value="lu">Luleåområdet (utsnitt, inte kommunfilter)</option></select></label>
+<label for="traffic-road">Väg <select id="traffic-road"><option value="all">Alla vägar</option><option value="E4">E4</option><option value="97">Väg 97</option><option value="94">Väg 94</option></select></label>
+<label for="traffic-type">Händelsetyp <select id="traffic-type"><option value="all">Alla händelsetyper</option></select></label>
+</div>
+<p id="traffic-status" class="muted" aria-live="polite">Kontrollerar Trafikverkets datainsamling…</p>
+<div id="traffic-map" style="height:420px;width:100%;background:#e8eff3;border-radius:8px" role="region" aria-label="Karta över vägtrafikmeddelanden från Trafikverket"></div>
+<p class="muted">Kartutsnittet filtrerar inte bort händelser i tabellen. Tabellens geografiska urval är hela Norrbottens län (länskod 25). Lägesangivelserna kommer från Trafikverket, inte från SMHI.</p>
+<p id="traffic-count" class="muted"></p>
+<div class="tablewrap"><table><thead><tr><th>Väg</th><th>Händelsetyp</th><th>Plats</th><th>Påverkan</th><th>Från</th><th>Till</th><th>Information</th></tr></thead><tbody id="traffic-rows"><tr><td colspan="7">Läser uppgifter…</td></tr></tbody></table></div>
+<p><a href="https://www.trafikverket.se/trafikinformation/vag/" target="_blank" rel="noopener noreferrer">Visa aktuella vägtrafikhändelser hos Trafikverket ↗</a></p>
+</section>
+<h2 style="margin:1.4rem 0 .7rem">Vädervarningar – SMHI</h2>
+<div class="warn"><strong>Inte en officiell varningskanal.</strong> SMHI:s varningspolygoner identifierar väderområden, inte specifika vägsträckor. Trafikverkets meddelanden är en separat källa. Kontrollera <a href="https://www.smhi.se/vader/varningar-och-meddelanden">SMHI:s aktuella varningar</a> och <a href="https://www.trafikverket.se/trafikinformation/">Trafikverkets trafikinformation</a> före resa.</div>
 <section class="panel"><div class="controls">
 <label>Geografiskt utsnitt <select id="region"><option value="se">Sverige</option><option value="nb">Norrbotten (kartutsnitt)</option><option value="lu">Luleå (kartutsnitt)</option></select></label>
 <label>Varningstyp <select id="type"><option value="all">Alla vädervarningar</option></select></label>
@@ -60,4 +76,116 @@ try{
  render();
 }catch(e){$('#status').textContent='SMHI-data kunde inte läsas eller verifieras. Kontrollera officiell källa. ('+e.message+')';warnings=[];render();}
 })();
-</script></body></html>
+</script><script>
+(async function(){
+ const $ = id=>document.getElementById(id);
+ const bbox = {
+  nb:[[65.1,16.0],[69.3,24.5]],
+  lu:[[65.35,21.4],[66.35,23.1]]
+ };
+ let map=null,layer=null,items=[];
+ try {
+  if(window.L){
+   map=L.map("traffic-map").fitBounds(bbox.nb);
+   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
+   layer=L.featureGroup().addTo(map);
+  } else { $("traffic-map").textContent="Kartbiblioteket är inte tillgängligt. Tabellen fungerar ändå."; }
+ } catch(e){$("traffic-map").textContent="Vägtrafikkartan kunde inte startas.";}
+ const formatDate = value=>{
+  if(!value)return "–";
+  const d=new Date(value);
+  return Number.isNaN(d.getTime()) ? String(value):
+   new Intl.DateTimeFormat("sv-SE",{dateStyle:"short",timeStyle:"short",timeZone:"Europe/Stockholm"}).format(d);
+ };
+ function textCell(tr,val){
+  const td=document.createElement("td");td.textContent=String(val??"–");tr.append(td);return td;
+ }
+ function normalizeRoad(value){
+  return String(value||"").toUpperCase().replace(/\s/g,"").replace(/^VÄG/,"").replace(/^RV/,"");
+ }
+ function markerColor(level){
+  const n=Number(level);
+  return n>=5?"#991b1b":n>=4?"#e26a24":n>=2?"#dca62f":"#475569";
+ }
+ function render(){
+  const wantedRoad=$("traffic-road").value,wantedType=$("traffic-type").value;
+  const rows=items.filter(r=>
+   (wantedRoad==="all"||normalizeRoad(r.road)===wantedRoad)&&
+   (wantedType==="all"||r.category===wantedType));
+  $("traffic-rows").replaceChildren();
+  if(layer)layer.clearLayers();
+  let geocount=0;
+  for(const r of rows){
+   const tr=document.createElement("tr");
+   textCell(tr,r.road||"Okänt vägnummer");
+   textCell(tr,r.category);
+   textCell(tr,r.location||"Geografi ej närmare angiven");
+   textCell(tr,r.severity||"Ej angiven");
+   textCell(tr,formatDate(r.start));
+   textCell(tr,formatDate(r.end));
+   const cell=document.createElement("td");
+   const details=document.createElement("details"),summary=document.createElement("summary");
+   summary.textContent=r.title||"Trafikmeddelande";
+   details.append(summary);
+   const info=document.createElement("p");
+   info.textContent=r.message||"Ingen ytterligare beskrivning.";
+   details.append(info);
+   if(r.restriction){const rest=document.createElement("p");rest.textContent="Trafikbegränsning: "+r.restriction;details.append(rest);}
+   if(r.updated){const update=document.createElement("small");update.textContent="Senast ändrad: "+formatDate(r.updated);details.append(update);}
+   cell.append(details);tr.append(cell);$("traffic-rows").append(tr);
+   if(map&&layer&&r.geometry){
+    try{
+     const color=markerColor(r.severity_code);
+     const feature={type:"Feature",geometry:r.geometry,properties:{}};
+     const group=L.geoJSON(feature,{
+      style:{color,weight:5,opacity:0.86},
+      pointToLayer:(feature,latlng)=>L.circleMarker(latlng,{radius:7,color:"#fff",weight:2,fillColor:color,fillOpacity:1})
+     });
+     const title=document.createElement("strong");title.textContent=r.title||r.category;
+     const popup=document.createElement("div");popup.append(title);
+     const location=document.createElement("p");location.textContent=[r.road,r.location,r.message].filter(Boolean).join(" – ");
+     popup.append(location);group.bindPopup(popup);group.addTo(layer);geocount++;
+    }catch(e){console.warn("Ogiltig Trafikverket-geometri:",e);}
+   }
+  }
+  if(!rows.length){
+   const tr=document.createElement("tr");const cell=textCell(tr,
+     items.length?"Inga vägtrafikhändelser matchar det valda filtret.":"Inga verifierade aktuella vägtrafikuppgifter att visa.");
+   cell.colSpan=7;
+  }
+  $("traffic-count").textContent=rows.length+" trafikhändelser i tabellen, "+geocount+" med kartgeometri.";
+  if(map)map.fitBounds(bbox[$("traffic-region").value]);
+ }
+ $("traffic-region").addEventListener("change",()=>{if(map)map.fitBounds(bbox[$("traffic-region").value]);});
+ $("traffic-road").addEventListener("change",render);
+ $("traffic-type").addEventListener("change",render);
+ try {
+  const r=await fetch("./data/trafikverket_road.json?ts="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("HTTP "+r.status);
+  const d=await r.json();
+  if(d.status==="missing_api_key"){
+   $("traffic-status").textContent=
+    "Trafikverkets API är ännu inte anslutet: GitHub Actions saknar TRAFIKVERKET_API_KEY. Trafikmeddelanden kan därför inte visas här. Använd länken till Trafikverkets vägkarta nedan.";
+   render();return;
+  }
+  if(d.status!=="ok"||!Array.isArray(d.records))throw Error("Ofullständig trafikinformation");
+  if(d.geometry_crs!=="EPSG:4326")throw Error("Källans koordinatsystem har inte verifierats");
+  const checked=new Date(d.checked_at_utc);
+  const age=Date.now()-checked.getTime();
+  if(!Number.isFinite(age)||age<0||age>45*60*1000){
+   $("traffic-status").textContent="Trafikverkets insamling är inaktuell (senaste körning "+formatDate(d.checked_at_utc)+"). Inaktuella poster visas inte som aktuella.";
+   render();return;
+  }
+  items=d.records;
+  $("traffic-status").textContent="Trafikverket: senast inläst "+formatDate(d.checked_at_utc)+" (svensk tid). Täckning: Norrbottens län.";
+  const types=[...new Set(items.map(x=>x.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"sv"));
+  for(const t of types){const o=document.createElement("option");o.value=t;o.textContent=t;$("traffic-type").append(o);}
+  render();
+ }catch(err){
+  $("traffic-status").textContent="Vägtrafikdata kunde inte verifieras ("+err.message+"). Kontrollera Trafikverkets officiella vägkarta.";
+  render();
+ }
+})();
+</script>
+</body></html>
