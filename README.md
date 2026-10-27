@@ -20,3 +20,22 @@ En källspårbar och geografiskt kontrollerad sammanställning av formella VMA o
 
 ## Säkerhetsregel
 Projektet är inte en officiell varningskanal. Visa aldrig inaktuella VMA som aktiva. Visa officiell länk och senaste lyckade inläsningstid.
+
+## Vägtrafikinformation och SMHI-vädervarningar
+
+Sidan [Vägvarningar](https://lulea-statistik.github.io/Krisinformation-och-VMA-Lule-/vagvarningar.html) redovisar två separata källor:
+
+- **Trafikverket Situation 1.5**: vägtrafikhändelser som olyckor, vägarbeten, avstängningar och hinder. Insamlingskod: `scripts/trafikverket_road.py`. Publicerad data: `data/trafikverket_road.json`. Regionalt urval: Norrbottens län (länskod 25).
+- **SMHI JSON-varningar**: vädervarningsområden och varningsnivåer. Dessa representerar inte enskilda vägtrafikhändelser.
+
+### Aktivera Trafikverkets API
+
+1. Registrera ett konto och skapa en API-nyckel på [Trafikverkets datautbytesportal](https://data.trafikverket.se/).
+2. Lägg in nyckeln som **Repository secret** med det exakta namnet `TRAFIKVERKET_API_KEY` under **Settings → Secrets and variables → Actions**.
+3. Kör [Uppdatera Trafikverkets vägtrafikinformation](https://github.com/Lulea-statistik/Krisinformation-och-VMA-Lule-/actions/workflows/trafikverket-road.yml) via **Run workflow**.
+4. Kontrollera att `data/trafikverket_road.json` innehåller `"status":"ok"`. Om `status` är `missing_api_key` är integrationen inte aktiverad.
+
+**Viktigt:** Nyckeln får inte skrivas in i HTML, JavaScript, JSON eller repositoryfiler. Schemat kör var 15:e minut. Saknad nyckel visas uttryckligen som ej ansluten, inte som noll trafikstörningar. En API-nyckel och lyckad körning behövs innan data kan verifieras mot det riktiga Trafikverket-API:t.
+
+Kartan visar endast Trafikverkets uttryckligen angivna WGS84-geometrier (EPSG:4326, GeoJSON longitud/latitud). Platsuppgifter utan verifierad WGS84-geometri finns endast i tabellen. Luleåalternativet är ett kartutsnitt, inte ett verifierat kommunurval.
+
