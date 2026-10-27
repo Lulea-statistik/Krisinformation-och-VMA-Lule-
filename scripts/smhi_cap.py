@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 FEED = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap.xml"
-CAP_PREFIX = "/ibww/api/version/1/cap/"
+CAP_PREFIX = "/ibww/api/version/1/"
 HOST = "opendata-download-warnings.smhi.se"
 OUTPUT = Path("data/smhi_cap_warnings.json")
 NS = {"cap": "urn:oasis:names:tc:emergency:cap:1.2"}
@@ -129,15 +129,19 @@ def parse_cap(root, url):
 
 def collect(feed, previous, downloader=fetch_xml, now=None):
     now = now or utc_now()
-    if feed.tag != "rss":
-        raise ValueError("SMHI feed is not an RSS document")
-    channel = feed.find("channel")
-    if channel is None:
-        raise ValueError("Missing RSS channel")
+    if feed.tag == "{urn:oasis:names:tc:emergency:cap:1.2}alert":
+        raise ValueError("CAP endpoint returned a single alert rather than a feed")
+    channel = feed.find("channel") if feed.tag == "rss" else None
     urls = []
     seen = set()
-    for item in channel.findall("item"):
+    items = channel.findall("item") if channel is not None else feed.findall("{http://www.w3.org/2005/Atom}entry")
+    if channel is None and not items:
+        raise ValueError("Unknown SMHI CAP feed format")
+    for item in items:
         link = (item.findtext("link") or "").strip()
+        if not link:
+            atom_link = item.find("{http://www.w3.org/2005/Atom}link")
+            link = atom_link.get("href", "") if atom_link is not None else ""
         if not link or link in seen:
             continue
         parsed = urlparse(link)
@@ -148,13 +152,9 @@ def collect(feed, previous, downloader=fetch_xml, now=None):
     # If a CAP item cannot be loaded, do not publish a potentially incomplete snapshot.
     if len(urls) > 250:
         raise ValueError("Unexpected number of CAP links")
-    cached = previous.get("messages", {}) if isinstance(previous, dict) else {}
     messages = {}
     for url in urls:
-        if url in cached and isinstance(cached[url], dict):
-            messages[url] = cached[url]
-        else:
-            messages[url] = parse_cap(downloader(url), url)
+        messages[url] = parse_cap(downloader(url), url)
     # CAP Update and Cancel references invalidate preceding messages.
     invalidated = {
         ref
