@@ -36,10 +36,17 @@ def fetch_xml(url):
         "User-Agent": "Lulea-statistik-SMHI-CAP/1.0 (public-information-project)",
         "Accept": "application/xml, text/xml, application/rss+xml"
     })
-    with urlopen(request, timeout=25) as response:
-        payload = response.read(3_000_001)
-    if len(payload) > 3_000_000:
-        raise ValueError("CAP response exceeded expected size")
+    # RSS can exceed 3 MB when numerous alerts and their metadata are present.
+    # Keep distinct, generous upper bounds to avoid memory exhaustion.
+    limit = 64 * 1024 * 1024 if url == FEED else 16 * 1024 * 1024
+    with urlopen(request, timeout=35) as response:
+        declared = response.headers.get("Content-Length")
+        if declared and int(declared) > limit:
+            raise ValueError(f"SMHI CAP document too large: {declared} bytes (limit {limit})")
+        payload = response.read(limit + 1)
+    if len(payload) > limit:
+        raise ValueError(f"SMHI CAP document too large: >{limit} bytes")
+    print(f"Fetched SMHI CAP XML: {len(payload)} bytes from {url}", flush=True)
     return ET.fromstring(payload)
 
 
