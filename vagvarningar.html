@@ -14,7 +14,7 @@
 <label>Allvarlighetsgrad <select id="severity"><option value="all">Alla nivåer</option></select></label>
 </div><p id="status" class="muted" aria-live="polite">Läser senaste datainsamlingen…</p><div id="map" role="region" aria-label="Karta över SMHI:s varningsområden"></div><p class="muted">Geografiska filter ändrar endast kartans utsnitt. Varningstabellen avser hela Sverige. Detta undviker falska kommunträffar utan verifierad kommunpolygon.</p></section>
 <section class="panel"><h2>Aktuella eller nyligen publicerade varningsområden</h2><p id="count" class="muted"></p><div class="tablewrap"><table><thead><tr><th>Varningstyp</th><th>Område</th><th>Allvarlighet</th><th>Giltig från</th><th>Giltig till</th><th>Beskrivning och källa</th></tr></thead><tbody id="rows"><tr><td colspan="6">Läser data…</td></tr></tbody></table></div></section>
-<section class="panel"><h2>Metod &amp; data</h2><p>Källa: <a href="https://opendata-download-warnings.smhi.se/ibww/api/version/1/cap.xml">SMHI:s CAP-flöde</a>. Insamling sker via GitHub Actions. CAP-koordinater är WGS84 (EPSG:4326) och omvandlas från CAP:s latitud,longitud till GeoJSON:s longitud,latitud. Varningsområden visas som polygoner; områden utan geometri kan endast visas i tabellen. Uppdateringar och återkallelser behandlas separat.</p><p>Data kan vara fördröjda. Om senast lyckade hämtning är äldre än två timmar visas den inte som aktuell. Ingen varning i tabellen innebär inte säkert att ingen varning finns. All originaltext och varningsnivå härrör från SMHI. Beskrivningar får inte tolkas som kommun- eller vägsträckspecifika observationer.</p><p>Detta är en fristående bearbetning och inte en tjänst från SMHI. Källa: Sveriges meteorologiska och hydrologiska institut (SMHI).</p></section></main><footer>Kontrollera alltid de officiella källorna.</footer>
+<section class="panel"><h2>Metod &amp; data</h2><p>Källa: <a href="https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json">SMHI:s aktuella varningar (JSON)</a>. Insamling sker via GitHub Actions från SMHI:s JSON-API för aktuella varningar. Polygonerna är GeoJSON i WGS84 (EPSG:4326), med koordinatordningen longitud, latitud. JSON-flödet används i stället för det omfattande CAP-RSS-flödet. Varningsområden visas som polygoner; områden utan geometri kan endast visas i tabellen. Endast poster som finns i det senaste lyckade aktuella flödet redovisas.</p><p>Data kan vara fördröjda. Om senast lyckade hämtning är äldre än två timmar visas den inte som aktuell. Ingen varning i tabellen innebär inte säkert att ingen varning finns. All originaltext och varningsnivå härrör från SMHI. Beskrivningar får inte tolkas som kommun- eller vägsträckspecifika observationer.</p><p>Detta är en fristående bearbetning och inte en tjänst från SMHI. Källa: Sveriges meteorologiska och hydrologiska institut (SMHI).</p></section></main><footer>Kontrollera alltid de officiella källorna.</footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (async()=>{
@@ -31,11 +31,11 @@ function render(){
  const filtered=warnings.filter(w=>(type==='all'||w.event===type)&&(severity==='all'||w.severity===severity));
  $('#rows').replaceChildren();if(layer)layer.clearLayers();let n=0;
  for(const w of filtered){
- const tr=document.createElement('tr');cell(tr,w.headline||w.event);cell(tr,w.area_name);cell(tr,w.severity);cell(tr,dt(w.onset||w.effective));cell(tr,dt(w.expires));
+ const tr=document.createElement('tr');cell(tr,w.headline||w.event);cell(tr,w.area_name);cell(tr,w.severity_label||w.severity);cell(tr,dt(w.onset||w.effective));cell(tr,dt(w.expires));
  const td=document.createElement('td');const detail=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Visa varningstext';detail.append(summary);const p=document.createElement('p');p.textContent=safe(w.description);detail.append(p);if(w.instruction){const i=document.createElement('p');i.textContent=w.instruction;detail.append(i);}td.append(detail);
- if(w.cap_url){const a=document.createElement('a');a.href=w.cap_url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='SMHI CAP (original)';td.append(a);}tr.append(td);$('#rows').append(tr);
+ if(w.cap_url){const a=document.createElement('a');a.href=w.cap_url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='SMHI – aktuell varningsinformation';td.append(a);}tr.append(td);$('#rows').append(tr);
  if(map&&w.geometry){try{
- const color={Extreme:'#9b1c31',Severe:'#dc6f20',Moderate:'#e8af27',Minor:'#538cbb'}[w.severity]||'#64748b';
+ const color={RED:'#b91c1c',ORANGE:'#ea580c',YELLOW:'#eab308',MESSAGE:'#64748b'}[w.severity]||'#64748b';
  const g=L.geoJSON({type:'Feature',geometry:w.geometry,properties:{}},{style:{color,weight:2,fillOpacity:.22}});
  const info=document.createElement('div');const b=document.createElement('strong');b.textContent=w.headline||w.event;info.append(b);const a=document.createElement('p');a.textContent=w.area_name||'';info.append(a);g.bindPopup(info);g.addTo(layer);n++;
  }catch(err){console.warn('Invalid SMHI geometry',err);}}
@@ -56,7 +56,7 @@ try{
  const events=[...new Set(warnings.map(w=>w.event).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'sv'));
  for(const e of events){const o=document.createElement('option');o.value=e;o.textContent=e;$('#type').append(o);}
  const severities=[...new Set(warnings.map(w=>w.severity).filter(Boolean))].sort();
- for(const e of severities){const o=document.createElement('option');o.value=e;o.textContent=e;$('#severity').append(o);}
+ for(const e of severities){const o=document.createElement('option');o.value=e;o.textContent=({RED:'Röd',ORANGE:'Orange',YELLOW:'Gul',MESSAGE:'Meddelande'}[e]||e);$('#severity').append(o);}
  render();
 }catch(e){$('#status').textContent='SMHI-data kunde inte läsas eller verifieras. Kontrollera officiell källa. ('+e.message+')';warnings=[];render();}
 })();
