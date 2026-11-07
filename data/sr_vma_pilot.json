@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-07T10:11:24.220301+00:00",
+  "checked_at_utc": "2026-11-07T16:27:17.811799+00:00",
   "source": "https://vmaapi.sr.se/api/v3/alerts",
   "mode": "read_only_aggregate_pilot",
   "public_alert_feed_enabled": false,
